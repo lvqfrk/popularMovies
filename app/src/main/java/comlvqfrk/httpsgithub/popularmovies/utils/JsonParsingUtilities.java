@@ -26,6 +26,12 @@ public class JsonParsingUtilities {
     private static final String KEY_RELEASE_DATE = "release_date";
 
 
+    /**
+     * this method will extract the needed data from Json returned in the http reponse.
+     * @param jsonResponseStr returned by NetworkingUtilities. getJsonReponseFromHttpUrl.
+     * @return a List of Movie.
+     * @throws JSONException
+     */
     public static List<Movie> extractDataFromJsonResponse(String jsonResponseStr) throws JSONException {
         List<Movie> movies = new ArrayList<>();
 
