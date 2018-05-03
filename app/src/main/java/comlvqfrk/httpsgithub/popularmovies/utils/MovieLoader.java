@@ -3,17 +3,16 @@ package comlvqfrk.httpsgithub.popularmovies.utils;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
+
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 
-public class MovieLoader extends AsyncTaskLoader <String>{
+public class MovieLoader extends AsyncTaskLoader <List<Movie>>{
 
     /** Tag for log messages  */
     private static final String LOG_TAG = MovieLoader.class.getName();
@@ -30,13 +29,19 @@ public class MovieLoader extends AsyncTaskLoader <String>{
 
     @Nullable
     @Override
-    public String loadInBackground() {
+    public List<Movie> loadInBackground() {
+        List<Movie> movies;
 
         try {
-            return NetworkingUtilities.getJsonResponseFromHttpsUrl();
+            String jsonStr = NetworkingUtilities.getJsonResponseFromHttpsUrl();
+            movies = JsonParsingUtilities.extractDataFromJsonResponse(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
+        return movies;
     }
 }

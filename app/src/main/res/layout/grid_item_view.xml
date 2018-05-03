@@ -3,16 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="175dp"
-    android:layout_height="262dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
     android:background="@color/colorAccent"
-    android:id="@+id/cl_root_item">
+    android:id="@+id/cl_root_item"
+    >
 
     <TextView
         android:id="@+id/tv_grid_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Title of the movie"/>
+        android:layout_width="100dp"
+        android:layout_height="200dp"
+        tools:text="Title of the movie"
+        android:gravity="bottom"/>
 
 
 </android.support.constraint.ConstraintLayout>

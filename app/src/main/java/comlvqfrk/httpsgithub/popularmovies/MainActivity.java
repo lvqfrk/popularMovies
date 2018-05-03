@@ -1,6 +1,5 @@
 package comlvqfrk.httpsgithub.popularmovies;
 
-import android.content.AsyncTaskLoader;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -10,22 +9,19 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
-import comlvqfrk.httpsgithub.popularmovies.utils.NetworkingUtilities;
+import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>{
 
     private final int TMDB_LOADER_ID = 22;
 
     private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
-    private int mPosition = RecyclerView.NO_POSITION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_main_screen);
 
+        /** Create a new Grid Layout manager, with 2 columns and vertical scrolling */
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
                 2, LinearLayoutManager.VERTICAL, false);
 
@@ -49,39 +46,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @NonNull
     @Override
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new android.support.v4.content.AsyncTaskLoader<String>(this) {
-            @Nullable
-            @Override
-            public String loadInBackground() {
-
-                String resultFromHttp = "";
-                try {
-                    resultFromHttp = NetworkingUtilities.getJsonResponseFromHttpsUrl();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-                return resultFromHttp;
-            }
-
-            @Override
-            protected void onStartLoading() {
-                forceLoad();
-            }
-        };
+    public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
+        return new MovieLoader(this);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        List<Movie> movies = new ArrayList<>();
-        Movie movTest = new Movie(data, "test", 5.5, "test", "test");
-        movies.add(movTest);
-        mMovieAdapter.swapMovies(movies);
+    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
+        mMovieAdapter.swapMovies(data);
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
 
     }
 }

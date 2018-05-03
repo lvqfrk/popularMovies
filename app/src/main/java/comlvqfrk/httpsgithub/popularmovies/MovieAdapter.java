@@ -21,7 +21,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         mContext = context;
     }
 
-
     @NonNull
     @Override
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,14 +38,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         holder.tvTitle.setText(title);
     }
 
-
-
     @Override
     public int getItemCount() {
+        if (mMovies == null) return 0;
         return mMovies.size();
     }
-
-
 
     public void swapMovies(List<Movie> newMovies){
         mMovies = newMovies;

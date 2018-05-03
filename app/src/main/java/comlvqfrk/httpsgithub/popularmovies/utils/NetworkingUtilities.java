@@ -1,7 +1,7 @@
 package comlvqfrk.httpsgithub.popularmovies.utils;
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
+
 
 import java.io.IOException;
 import java.io.InputStream;
