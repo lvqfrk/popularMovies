@@ -5,17 +5,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    android:background="@color/colorAccent"
     android:id="@+id/cl_root_item"
+    android:layout_margin="8dp"
     >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/iv_grid_poster"
+        />
 
     <TextView
         android:id="@+id/tv_grid_title"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        tools:text="Title of the movie"
-        android:gravity="bottom"/>
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:padding="4dp"
+        android:lines="1"
+        android:ellipsize="end"
+        android:text="Title"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/iv_grid_poster"
+        />
 
 </android.support.constraint.ConstraintLayout>

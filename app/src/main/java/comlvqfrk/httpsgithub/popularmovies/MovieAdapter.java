@@ -6,7 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -16,6 +19,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private final Context mContext;
     private List<Movie> mMovies;
+
+    /** base Url for getting poster image from TMDB, width 200 */
+    private static final String TMDB_POSTER_W185_BASE_URL = "http://image.tmdb.org/t/p/w342//";
 
     public MovieAdapter(Context context) {
         mContext = context;
@@ -35,7 +41,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.MovieAdapterViewHolder holder, int position) {
         String title = mMovies.get(position).getTitle();
+
         holder.tvTitle.setText(title);
+
+        String posterUrl = TMDB_POSTER_W185_BASE_URL + mMovies.get(position).getPosterUrl();
+
+        Picasso.with(mContext).load(posterUrl).into(holder.ivPoster);
+
     }
 
     @Override
@@ -52,10 +64,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final TextView tvTitle;
+        final ImageView ivPoster;
 
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_grid_title);
+            ivPoster = (ImageView) itemView.findViewById(R.id.iv_grid_poster);
         }
 
         @Override
