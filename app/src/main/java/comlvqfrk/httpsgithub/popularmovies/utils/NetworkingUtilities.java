@@ -26,10 +26,10 @@ public class NetworkingUtilities {
      * build an URL for query a Json response from themoviedb's API.
      * @return URL to use to query the movies db.
      */
-    private static URL buildURl() {
+    private static URL buildURl(String sortOrder) {
         Uri movieQueryUri = Uri.parse(TMDB_DISCOVER_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
-                .appendQueryParameter(SORT_BY_PARAM, "popularity.desc")
+                .appendQueryParameter(SORT_BY_PARAM, sortOrder)
                 .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
                 .build();
 
@@ -46,8 +46,8 @@ public class NetworkingUtilities {
      * @return Json data into a String
      * @throws IOException
      */
-    public static String getJsonResponseFromHttpsUrl() throws IOException{
-        URL queryUrl = buildURl();
+    public static String getJsonResponseFromHttpsUrl(String sortOrder) throws IOException{
+        URL queryUrl = buildURl(sortOrder);
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{
             InputStream in = urlConnection.getInputStream();

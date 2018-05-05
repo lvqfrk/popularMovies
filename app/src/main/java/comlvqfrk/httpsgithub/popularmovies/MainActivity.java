@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -65,10 +68,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.me_sort_most_popular:
+                loadMovies("popularity.desc");
+                return true;
+            case R.id.me_sort_hightest_rated:
+                loadMovies("vote_average.desc");
+                return true;
+            case R.id.me_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @NonNull
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new MovieLoader(this);
+        if (args == null) {
+            return new MovieLoader(this, null);
+        } else {
+            String sortOrder = args.getString("key_sort");
+            return new MovieLoader(this, sortOrder);
+        }
+
     }
 
     @Override
@@ -93,4 +125,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    public void loadMovies(String sort_order){
+        Bundle bundle = new Bundle();
+        bundle.putString("key_sort", sort_order);
+        LoaderManager loaderManager = getSupportLoaderManager();
+        loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
+    }
+
 }
