@@ -21,16 +21,44 @@ public class NetworkingUtilities {
     private static final String SORT_BY_PARAM = "sort_by";
     /** param keyword for displaying adult content*/
     private static final String INCLUDE_ADULT_PARAM = "include_adult";
+    /** param value for most popular */
+    private static final String MOST_POPULAR_VALUE = "popularity.desc";
+    /** param value for best rates*/
+    private static final String VOTE_AVERAGE = "vote_average.desc";
+    /** param keyword for minimum votes */
+    private static final String MIN_VOTE_COUNT_PARAM = "vote_count.gte";
+    /** param value to set a minimum of vote for query best rates */
+    private static final String MIN_VOTE_COUNT_VALUE = "5000";
 
     /**
-     * build an URL for query a Json response from themoviedb's API.
+     * build an URL for query most popular movies on TMDb.
      * @return URL to use to query the movies db.
      */
-    private static URL buildURl(String sortOrder) {
+    private static URL buildUrlForMostPopular() {
         Uri movieQueryUri = Uri.parse(TMDB_DISCOVER_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
-                .appendQueryParameter(SORT_BY_PARAM, sortOrder)
+                .appendQueryParameter(SORT_BY_PARAM, MOST_POPULAR_VALUE)
                 .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
+                .build();
+
+        try {
+            return new URL(movieQueryUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * build an URL for query most highest rated movies on TMDb.
+     * @return URL to use to query the movies db.
+     */
+    private static URL buildUrlForHighestRated() {
+        Uri movieQueryUri = Uri.parse(TMDB_DISCOVER_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
+                .appendQueryParameter(SORT_BY_PARAM, VOTE_AVERAGE)
+                .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
+                .appendQueryParameter(MIN_VOTE_COUNT_PARAM, MIN_VOTE_COUNT_VALUE)
                 .build();
 
         try {
@@ -46,8 +74,20 @@ public class NetworkingUtilities {
      * @return Json data into a String
      * @throws IOException
      */
-    public static String getJsonResponseFromHttpsUrl(String sortOrder) throws IOException{
-        URL queryUrl = buildURl(sortOrder);
+    public static String getJsonResponseFromHttpsUrl(int queryCode) throws IOException{
+
+        URL queryUrl;
+        switch (queryCode){
+            case 100:
+                queryUrl = buildUrlForMostPopular();
+                break;
+            case 101:
+                queryUrl = buildUrlForHighestRated();
+                break;
+            default:
+                queryUrl = buildUrlForMostPopular();
+        }
+
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{
             InputStream in = urlConnection.getInputStream();

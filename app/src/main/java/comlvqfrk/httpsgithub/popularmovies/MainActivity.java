@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private TextView mTvInternetError;
-
     private boolean connectivityState = false;
 
     @Override
@@ -60,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mMovieAdapter = new MovieAdapter(this);
             mRecyclerView.setAdapter(mMovieAdapter);
 
-            LoaderManager loaderManager = getSupportLoaderManager();
-            loaderManager.initLoader(TMDB_LOADER_ID, null, this);
+            /** query movie by most Popular ( 100 == most popular)*/
+            loadMovies(100);
         } else {
             mProgressBar.setVisibility(View.GONE);
             mTvInternetError.setVisibility(View.VISIBLE);
@@ -79,10 +78,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.me_sort_most_popular:
-                loadMovies("popularity.desc");
+                /** query movie by most Popular ( 100 == most popular)*/
+                loadMovies(100);
                 return true;
             case R.id.me_sort_hightest_rated:
-                loadMovies("vote_average.desc");
+                /** query movie by most Popular ( 101 == best rates) */
+                loadMovies(101);
                 return true;
             case R.id.me_settings:
                 return true;
@@ -94,13 +95,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @NonNull
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
-        if (args == null) {
-            return new MovieLoader(this, null);
-        } else {
-            String sortOrder = args.getString("key_sort");
-            return new MovieLoader(this, sortOrder);
-        }
-
+            int queryType = args.getInt("queryType");
+            return new MovieLoader(this, queryType);
     }
 
     @Override
@@ -126,9 +122,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void loadMovies(String sort_order){
+    public void loadMovies(int queryCode){
         Bundle bundle = new Bundle();
-        bundle.putString("key_sort", sort_order);
+        bundle.putInt("queryType", queryCode);
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }

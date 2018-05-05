@@ -17,12 +17,12 @@ public class MovieLoader extends AsyncTaskLoader <List<Movie>>{
     /** Tag for log messages  */
     private static final String LOG_TAG = MovieLoader.class.getName();
 
-    private static String mSortOrder = "popularity.desc";
+    private static int mQueryCode = 100;
 
     /** Constructor for MovieLoader */
-    public MovieLoader(Context context, String sortOrder) {
+    public MovieLoader(Context context, int queryCode) {
         super(context);
-        mSortOrder = sortOrder;
+        mQueryCode = queryCode;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class MovieLoader extends AsyncTaskLoader <List<Movie>>{
         List<Movie> movies;
 
         try {
-            String jsonStr = NetworkingUtilities.getJsonResponseFromHttpsUrl(mSortOrder);
+            String jsonStr = NetworkingUtilities.getJsonResponseFromHttpsUrl(mQueryCode);
             movies = JsonParsingUtilities.extractDataFromJsonResponse(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();

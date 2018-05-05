@@ -30,22 +30,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @NonNull
     @Override
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         int layoutId = R.layout.grid_item_view;
-
         View view = LayoutInflater.from(mContext).inflate(layoutId, parent, false);
-
         return new MovieAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.MovieAdapterViewHolder holder, int position) {
         String title = mMovies.get(position).getTitle();
-
         holder.tvTitle.setText(title);
-
         String posterUrl = TMDB_POSTER_W185_BASE_URL + mMovies.get(position).getPosterUrl();
-
         Picasso.with(mContext).load(posterUrl).into(holder.ivPoster);
 
     }
@@ -62,7 +56,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         final TextView tvTitle;
         final ImageView ivPoster;
 
