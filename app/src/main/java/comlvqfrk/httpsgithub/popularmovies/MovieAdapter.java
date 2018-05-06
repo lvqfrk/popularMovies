@@ -1,6 +1,7 @@
 package comlvqfrk.httpsgithub.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,14 +18,21 @@ import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
 
-    private final Context mContext;
+    private Context mContext;
     private List<Movie> mMovies;
+    private MovieAdapterOnClickHandler mClickHandler;
 
     /** base Url for getting poster image from TMDB, width 200 */
     private static final String TMDB_POSTER_W185_BASE_URL = "http://image.tmdb.org/t/p/w342//";
 
-    public MovieAdapter(Context context) {
+    public MovieAdapter(Context context, MovieAdapterOnClickHandler clickHandler) {
         mContext = context;
+        mClickHandler = clickHandler;
+
+    }
+
+    public interface MovieAdapterOnClickHandler {
+        void onClick(int imbdId);
     }
 
     @NonNull
@@ -39,6 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(@NonNull MovieAdapter.MovieAdapterViewHolder holder, int position) {
         String title = mMovies.get(position).getTitle();
         holder.tvTitle.setText(title);
+        holder.tvTitle.setTag(position);
         String posterUrl = TMDB_POSTER_W185_BASE_URL + mMovies.get(position).getPosterUrl();
         Picasso.with(mContext).load(posterUrl).into(holder.ivPoster);
 
@@ -63,11 +72,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_grid_title);
             ivPoster = (ImageView) itemView.findViewById(R.id.iv_grid_poster);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            int pos = getAdapterPosition();
+            int currentMovieId = mMovies.get(pos).getImdebId();
+            mClickHandler.onClick(currentMovieId);
         }
     }
 }

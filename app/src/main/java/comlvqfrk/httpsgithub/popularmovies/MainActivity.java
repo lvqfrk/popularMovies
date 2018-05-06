@@ -1,6 +1,7 @@
 package comlvqfrk.httpsgithub.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -12,12 +13,14 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>, MovieAdapter.MovieAdapterOnClickHandler{
 
     private final int TMDB_LOADER_ID = 22;
 
@@ -50,22 +53,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         connectivityState = isNetworkAvailable();
 
         if (connectivityState) {
-            /** Create a new Grid Layout manager, with 2 columns and vertical scrolling */
+            // Create a new Grid Layout manager, with 2 columns and vertical scrolling
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
                     2, LinearLayoutManager.VERTICAL, false);
 
-            mRecyclerView.setLayoutManager(gridLayoutManager);
 
-            mMovieAdapter = new MovieAdapter(this);
+            mRecyclerView.setLayoutManager(gridLayoutManager);
+            mMovieAdapter = new MovieAdapter(this, this);
             mRecyclerView.setAdapter(mMovieAdapter);
 
-            /** query movie by most Popular ( 100 == most popular)*/
+            // query movie by most Popular ( 100 == most popular)
             loadMovies(100);
         } else {
             mProgressBar.setVisibility(View.GONE);
             mTvInternetError.setVisibility(View.VISIBLE);
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,11 +83,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.me_sort_most_popular:
-                /** query movie by most Popular ( 100 == most popular)*/
+                // query movie by most Popular ( 100 == most popular)
                 loadMovies(100);
                 return true;
             case R.id.me_sort_hightest_rated:
-                /** query movie by most Popular ( 101 == best rates) */
+                // query movie by most Popular ( 101 == best rates)
                 loadMovies(101);
                 return true;
             case R.id.me_settings:
@@ -129,4 +134,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }
 
+    @Override
+    public void onClick(int imbdId) {
+        Context context = this;
+        Intent detailIntent = new Intent(this, DetailsActivity.class);
+        detailIntent.putExtra("EXTRA_ID", imbdId);
+        startActivity(detailIntent);
+    }
 }

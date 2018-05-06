@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailsActivity">
+
+    <ImageView
+        android:id="@+id/iv_details_poster"
+        android:layout_width="185dp"
+        android:layout_height="277dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/tv_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@+id/iv_details_poster"
+        app:layout_constraintTop_toTopOf="@+id/iv_details_poster"
+        tools:text="title" />
+
+    <TextView
+        android:id="@+id/tv_details_release_release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:text="12-22-2017"
+        app:layout_constraintStart_toStartOf="@+id/tv_details_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_details_title" />
+
+    <TextView
+        android:id="@+id/tv_details_vote_average"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:text="rate: 5"
+        app:layout_constraintStart_toStartOf="@+id/tv_details_release_release_date"
+        app:layout_constraintTop_toBottomOf="@+id/tv_details_release_release_date" />
+
+    <TextView
+        android:id="@+id/tv_details_synopsis_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:text="Synopsis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_details_poster" />
+
+    <TextView
+        android:id="@+id/tv_details_synopsis_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:text="synopsis content"
+        app:layout_constraintStart_toStartOf="@+id/tv_details_synopsis_label"
+        app:layout_constraintTop_toBottomOf="@+id/tv_details_synopsis_label" />
+
+
+</android.support.constraint.ConstraintLayout>

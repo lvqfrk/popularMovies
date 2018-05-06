@@ -13,6 +13,8 @@ public class JsonParsingUtilities {
 
     /** name of the array where movies data are located in Json response */
     private static final String KEY_RESULTS = "results";
+
+    private static final String KEY_ID = "id";
     /** keyword for extract title from JSon */
     private static final String KEY_TITLE = "title";
     /** keyword for extract poster path from JSon */
@@ -39,12 +41,13 @@ public class JsonParsingUtilities {
 
         for (int i = 0; i < results.length(); i++) {
             JSONObject currentMovie = results.getJSONObject(i);
+            int imdbId = currentMovie.getInt(KEY_ID);
             String title = currentMovie.getString(KEY_TITLE);
             String posterPath = currentMovie.getString(KEY_POSTER_PATH);
             double voteAverage = currentMovie.getDouble(KEY_VOTE_AVERAGE);
             String overview = currentMovie.getString(KEY_OVERVIEW);
             String releaseDate = currentMovie.getString(KEY_RELEASE_DATE);
-            Movie newMovie = new Movie(title, posterPath, voteAverage, overview, releaseDate);
+            Movie newMovie = new Movie(imdbId, title, posterPath, voteAverage, overview, releaseDate);
             movies.add(newMovie);
         }
 

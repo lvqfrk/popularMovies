@@ -4,6 +4,7 @@ import java.net.URL;
 
 public class Movie {
 
+    private int mImdbId;
     private String mTitle;
     private String mPosterUrl;
     private double mVoteAverage;
@@ -18,13 +19,22 @@ public class Movie {
      * @param overview synospis of the movie.
      * @param releaseDate for the movie.
      */
-    public Movie(String title, String posterUrl, double voteAverage,
+    public Movie(int imdbId, String title, String posterUrl, double voteAverage,
                  String overview, String releaseDate) {
+        mImdbId = imdbId;
         mTitle = title;
         mPosterUrl = posterUrl;
         mVoteAverage = voteAverage;
         mOverview = overview;
         mReleaseDate = releaseDate;
+    }
+
+    /**
+     * get the imdb'id of the movie
+     * @return mImdbId
+     */
+    public int getImdebId() {
+        return mImdbId;
     }
 
     /**

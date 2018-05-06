@@ -60,7 +60,6 @@ public class NetworkingUtilities {
                 .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
                 .appendQueryParameter(MIN_VOTE_COUNT_PARAM, MIN_VOTE_COUNT_VALUE)
                 .build();
-
         try {
             return new URL(movieQueryUri.toString());
         } catch (MalformedURLException e) {
