@@ -36,8 +36,8 @@ public class MovieLoader extends AsyncTaskLoader <List<Movie>>{
         List<Movie> movies;
 
         try {
-            String jsonStr = NetworkingUtilities.getJsonResponseFromHttpsUrl(mQueryCode);
-            movies = JsonParsingUtilities.extractDataFromJsonResponse(jsonStr);
+            String jsonStr = NetworkingUtilities.getJsonForMainScreen(mQueryCode);
+            movies = JsonParsingUtilities.extractMoviesFromJson(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

@@ -33,7 +33,7 @@ public class JsonParsingUtilities {
      * @return a List of Movie.
      * @throws JSONException
      */
-    public static List<Movie> extractDataFromJsonResponse(String jsonResponseStr) throws JSONException {
+    public static List<Movie> extractMoviesFromJson(String jsonResponseStr) throws JSONException {
         List<Movie> movies = new ArrayList<>();
 
         JSONObject jsonResponse = new JSONObject(jsonResponseStr);
