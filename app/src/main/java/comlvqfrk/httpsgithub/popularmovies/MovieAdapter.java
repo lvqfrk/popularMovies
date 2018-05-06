@@ -32,7 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public interface MovieAdapterOnClickHandler {
-        void onClick(int imbdId);
+        void onClick(Movie currentMovie);
     }
 
     @NonNull
@@ -78,8 +78,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int pos = getAdapterPosition();
-            int currentMovieId = mMovies.get(pos).getImdebId();
-            mClickHandler.onClick(currentMovieId);
+            Movie currentMovie = mMovies.get(pos);
+            mClickHandler.onClick(currentMovie);
         }
     }
 }

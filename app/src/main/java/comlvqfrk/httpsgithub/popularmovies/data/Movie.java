@@ -33,7 +33,7 @@ public class Movie {
      * get the imdb'id of the movie
      * @return mImdbId
      */
-    public int getImdebId() {
+    public int getImdbId() {
         return mImdbId;
     }
 
