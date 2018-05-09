@@ -44,10 +44,16 @@ public class JsonParsingUtilities {
             int imdbId = currentMovie.getInt(KEY_ID);
             String title = currentMovie.getString(KEY_TITLE);
             String posterPath = currentMovie.getString(KEY_POSTER_PATH);
-            double voteAverage = currentMovie.getDouble(KEY_VOTE_AVERAGE);
-            String overview = currentMovie.getString(KEY_OVERVIEW);
-            String releaseDate = currentMovie.getString(KEY_RELEASE_DATE);
-            Movie newMovie = new Movie(imdbId, title, posterPath, voteAverage, overview, releaseDate);
+            double voteAverage = 0;
+            String overview = "";
+            String releaseDate = "";
+            Movie newMovie = new Movie(imdbId,
+                    title,
+                    posterPath,
+                    voteAverage,
+                    overview,
+                    releaseDate);
+
             movies.add(newMovie);
         }
 
@@ -56,5 +62,10 @@ public class JsonParsingUtilities {
         } else {
             return null;
         }
+    }
+
+    public static Movie extractDetailsFromJsonResponse(String jsonReponse) throws JSONException{
+        //TODO (2): parse response from http request
+        return null;
     }
 }

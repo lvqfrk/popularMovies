@@ -16,12 +16,22 @@ public class MovieLoader extends AsyncTaskLoader <String>{
     private static final String LOG_TAG = MovieLoader.class.getName();
 
     private static int mQueryCode = 100;
+
+    private static int mImdbId;
+
+    /** use as cache for httpResponse */
     private String mData;
 
     /** Constructor for MovieLoader */
     public MovieLoader(Context context, int queryCode) {
         super(context);
         mQueryCode = queryCode;
+    }
+
+    public MovieLoader(Context context, int queryCode, int imdbId) {
+        super(context);
+        mQueryCode = queryCode;
+        mImdbId = imdbId;
     }
 
     @Override
@@ -36,12 +46,29 @@ public class MovieLoader extends AsyncTaskLoader <String>{
     @Nullable
     @Override
     public String loadInBackground() {
-            try {
-                return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+
+        switch (mQueryCode){
+            // queryCode 100 for searching most popular
+            case 100:
+            // queryCode 102 for highest rated
+            case 101:
+                try {
+                    return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            // queryCode 150 for searching movies by imdb's ID
+            case 150:
+                try {
+                    return NetworkingUtilities.getJsonForDetails(mImdbId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            default: return null;
+        }
+
     }
 
     @Override

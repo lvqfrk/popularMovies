@@ -75,6 +75,7 @@ public class NetworkingUtilities {
      * @return URL to query movies details.
      */
     private static URL buildUrlForDetails(int id) throws IOException {
+        // TODO (1): code this method to use the tmdb id and append video parameter.
         String urlWithId = TMDB_FIND_BY_ID_BASE_URL + id;
 
         Uri movieQueryUri = Uri.parse(urlWithId).buildUpon()
