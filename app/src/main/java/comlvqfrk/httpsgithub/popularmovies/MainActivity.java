@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
                     2, LinearLayoutManager.VERTICAL, false);
 
-
             mRecyclerView.setLayoutManager(gridLayoutManager);
             mMovieAdapter = new MovieAdapter(this, this);
             mRecyclerView.setAdapter(mMovieAdapter);
@@ -70,13 +69,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = new MenuInflater(this);
-        menuInflater.inflate(R.menu.menu_main, menu);
-        return true;
+        if (connectivityState) {
+            MenuInflater menuInflater = new MenuInflater(this);
+            menuInflater.inflate(R.menu.menu_main, menu);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

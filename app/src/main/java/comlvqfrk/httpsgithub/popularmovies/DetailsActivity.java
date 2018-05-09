@@ -1,9 +1,12 @@
 package comlvqfrk.httpsgithub.popularmovies;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,11 +33,11 @@ public class DetailsActivity extends AppCompatActivity {
     private String MOVIE_RELEASE_DATE;
     private String MOVIE_POSTER_PATH;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
