@@ -5,19 +5,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.List;
 
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 
-public class MovieLoader extends AsyncTaskLoader <List<Movie>>{
+public class MovieLoader extends AsyncTaskLoader <String>{
 
     /** Tag for log messages  */
     private static final String LOG_TAG = MovieLoader.class.getName();
 
     private static int mQueryCode = 100;
+    private String mData;
 
     /** Constructor for MovieLoader */
     public MovieLoader(Context context, int queryCode) {
@@ -27,24 +26,28 @@ public class MovieLoader extends AsyncTaskLoader <List<Movie>>{
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (mData != null) {
+            deliverResult(mData);
+            return;
+        }
+            forceLoad();
     }
 
     @Nullable
     @Override
-    public List<Movie> loadInBackground() {
-        List<Movie> movies;
+    public String loadInBackground() {
 
         try {
-            String jsonStr = NetworkingUtilities.getJsonForMainScreen(mQueryCode);
-            movies = JsonParsingUtilities.extractMoviesFromJson(jsonStr);
+            return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
         }
-        return movies;
+    }
+
+    @Override
+    public void deliverResult(@Nullable String data) {
+        mData = data;
+        super.deliverResult(data);
     }
 }

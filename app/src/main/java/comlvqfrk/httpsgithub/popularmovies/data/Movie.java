@@ -1,5 +1,6 @@
 package comlvqfrk.httpsgithub.popularmovies.data;
 
+import java.io.Serializable;
 import java.net.URL;
 
 public class Movie {

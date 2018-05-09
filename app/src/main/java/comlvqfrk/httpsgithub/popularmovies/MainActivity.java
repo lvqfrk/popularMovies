@@ -13,22 +13,23 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import org.json.JSONException;
 
 import java.util.List;
 
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
+import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>, MovieAdapter.MovieAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>, MovieAdapter.MovieAdapterOnClickHandler{
 
     private final int TMDB_LOADER_ID = 22;
 
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar mProgressBar;
     private TextView mTvInternetError;
     private boolean connectivityState = false;
+    private int mQueryPref = 100;
+
+    private String mData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mTvInternetError = (TextView) findViewById(R.id.tv_main_error_internet);
         connectivityState = isNetworkAvailable();
 
+
         if (connectivityState) {
             // Create a new Grid Layout manager, with 2 columns and vertical scrolling
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
@@ -61,13 +66,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mMovieAdapter = new MovieAdapter(this, this);
             mRecyclerView.setAdapter(mMovieAdapter);
 
-            // query movie by most Popular ( 100 == most popular)
-            loadMovies(100);
+            if (savedInstanceState != null) {
+                mData = savedInstanceState.getString("callback");
+            }else {
+                loadMovies(mQueryPref);
+            }
+
+
+
         } else {
             mProgressBar.setVisibility(View.GONE);
             mTvInternetError.setVisibility(View.VISIBLE);
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,11 +97,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (item.getItemId()){
             case R.id.me_sort_most_popular:
                 // query movie by most Popular ( 100 == most popular)
-                loadMovies(100);
+                mQueryPref = 100;
+                loadMovies(mQueryPref);
                 return true;
             case R.id.me_sort_hightest_rated:
                 // query movie by most Popular ( 101 == best rates)
-                loadMovies(101);
+                mQueryPref = 101;
+                loadMovies(mQueryPref);
                 return true;
             case R.id.me_settings:
                 return true;
@@ -98,22 +112,49 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("callback", mData);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        try {
+            List<Movie> movies = JsonParsingUtilities.extractMoviesFromJson(mData);
+            mMovieAdapter.swapMovies(movies);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+
     @NonNull
     @Override
-    public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
             int queryType = args.getInt("queryType");
             return new MovieLoader(this, queryType);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-        mMovieAdapter.swapMovies(data);
-        mProgressBar.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+        mData = data;
+        try {
+            List<Movie> movies = JsonParsingUtilities.extractMoviesFromJson(data);
+            mMovieAdapter.swapMovies(movies);
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+    public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
 
