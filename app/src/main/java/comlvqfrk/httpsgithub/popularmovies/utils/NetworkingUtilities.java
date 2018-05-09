@@ -129,7 +129,7 @@ public class NetworkingUtilities {
 
     /**
      * this method return the entire Json result from Http response.
-     * Use this method to find a movie by ID.
+     * Use this method to find a movie by ID to get more details on a movie.
      * @return Json data into a String
      * @throws IOException
      */

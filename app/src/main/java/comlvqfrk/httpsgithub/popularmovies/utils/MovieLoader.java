@@ -36,13 +36,12 @@ public class MovieLoader extends AsyncTaskLoader <String>{
     @Nullable
     @Override
     public String loadInBackground() {
-
-        try {
-            return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+            try {
+                return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
     }
 
     @Override
