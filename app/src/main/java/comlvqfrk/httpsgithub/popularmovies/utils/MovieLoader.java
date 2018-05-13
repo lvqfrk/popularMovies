@@ -48,9 +48,9 @@ public class MovieLoader extends AsyncTaskLoader <String>{
     public String loadInBackground() {
 
         switch (mQueryCode){
-            // queryCode 100 for searching most popular
+            // queryCode 100 for searching most popular.
             case 100:
-            // queryCode 102 for highest rated
+            // queryCode 102 for highest rated.
             case 101:
                 try {
                     return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
@@ -58,7 +58,7 @@ public class MovieLoader extends AsyncTaskLoader <String>{
                     e.printStackTrace();
                     return null;
                 }
-            // queryCode 150 for searching movies by imdb's ID
+            // queryCode 150 for searching movie's detail.
             case 150:
                 try {
                     return NetworkingUtilities.getJsonForDetails(mImdbId);

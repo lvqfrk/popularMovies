@@ -181,11 +181,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Context context = this;
         Intent detailIntent = new Intent(this, DetailsActivity.class);
         detailIntent.putExtra("IMDB_ID", currentMovie.getImdbId());
-        detailIntent.putExtra("TITLE", currentMovie.getTitle());
-        detailIntent.putExtra("VOTE", currentMovie.getVoteAverage());
-        detailIntent.putExtra("OVERVIEW", currentMovie.getOverview());
-        detailIntent.putExtra("POSTER_PATH", currentMovie.getPosterUrl());
-        detailIntent.putExtra("RELEASE_DATE", currentMovie.getReleaseDate());
         startActivity(detailIntent);
     }
 }

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 
 public class JsonParsingUtilities {
@@ -44,15 +45,9 @@ public class JsonParsingUtilities {
             int imdbId = currentMovie.getInt(KEY_ID);
             String title = currentMovie.getString(KEY_TITLE);
             String posterPath = currentMovie.getString(KEY_POSTER_PATH);
-            double voteAverage = 0;
-            String overview = "";
-            String releaseDate = "";
             Movie newMovie = new Movie(imdbId,
                     title,
-                    posterPath,
-                    voteAverage,
-                    overview,
-                    releaseDate);
+                    posterPath);
 
             movies.add(newMovie);
         }
@@ -64,8 +59,21 @@ public class JsonParsingUtilities {
         }
     }
 
-    public static Movie extractDetailsFromJsonResponse(String jsonReponse) throws JSONException{
-        //TODO (2): parse response from http request
-        return null;
+    public static DetailedMovie extractDetailsFromJsonResponse(String jsonResponseStr) throws JSONException{
+        JSONObject jsonResponse = new JSONObject(jsonResponseStr);
+        int id = jsonResponse.getInt("id");
+        String title = jsonResponse.getString("title");
+        String posterPath = jsonResponse.getString("poster_path");
+        double voteAverage = jsonResponse.getDouble("vote_average");
+        String overview = jsonResponse.getString("overview");
+        String releaseDate = jsonResponse.getString("release_date");
+
+        JSONObject videos = jsonResponse.getJSONObject("videos");
+        JSONArray videosResults = videos.getJSONArray("results");
+        String trailerPath = videosResults.getJSONObject(0).getString("key");
+
+        DetailedMovie movie = new DetailedMovie(id, title, posterPath, voteAverage,
+                overview, releaseDate, trailerPath);
+        return movie;
     }
 }

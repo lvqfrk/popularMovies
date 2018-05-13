@@ -3,6 +3,10 @@ package comlvqfrk.httpsgithub.popularmovies;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,12 +16,21 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import comlvqfrk.httpsgithub.popularmovies.data.Movie;
+import org.json.JSONException;
 
-public class DetailsActivity extends AppCompatActivity {
+import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
+import comlvqfrk.httpsgithub.popularmovies.data.Movie;
+import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
+import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
+
+public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
 
     /** base Url for getting poster image from TMDB, width 200 */
     private static final String TMDB_POSTER_W185_BASE_URL = "http://image.tmdb.org/t/p/w342//";
+
+    private static final int mQueryCode = 150;
+
+    private final int TMDB_LOADER_ID = 22;
 
     private TextView tvDetailTitle;
     private TextView tvDetailVoteAverage;
@@ -27,11 +40,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     // data from Itent
     private int MOVIE_IMDB_ID;
-    private String MOVIE_TITLE;
-    private double MOVIE_VOTE_AVERAGE;
-    private String MOVIE_OVERVIEW;
-    private String MOVIE_RELEASE_DATE;
-    private String MOVIE_POSTER_PATH;
+    private DetailedMovie currentMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,33 +54,60 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent incIntent = getIntent();
         MOVIE_IMDB_ID = incIntent.getIntExtra("IMDB_ID", 0);
-        MOVIE_TITLE = incIntent.getStringExtra("TITLE");
-        MOVIE_VOTE_AVERAGE = incIntent.getDoubleExtra("VOTE", 0.0);
-        MOVIE_OVERVIEW = incIntent.getStringExtra("OVERVIEW");
-        MOVIE_RELEASE_DATE = incIntent.getStringExtra("RELEASE_DATE");
-        MOVIE_POSTER_PATH = incIntent.getStringExtra("POSTER_PATH");
-
         // title TextView
         tvDetailTitle = findViewById(R.id.tv_details_title);
-        tvDetailTitle.setText(MOVIE_TITLE);
         // Vote average TextView
         tvDetailVoteAverage = findViewById(R.id.tv_details_vote_average);
-        tvDetailVoteAverage.setText(MOVIE_VOTE_AVERAGE + "");
         // release date TextView
         tvDetailReleaseDate = findViewById(R.id.tv_details_release_release_date);
-        tvDetailReleaseDate.setText(MOVIE_RELEASE_DATE);
         // poster ImageView
         ivDetailPoster = findViewById(R.id.iv_details_poster);
-        String posterUrl = TMDB_POSTER_W185_BASE_URL + MOVIE_POSTER_PATH;
-        Picasso.with(this).load(posterUrl).into(ivDetailPoster);
         // overview TextView
         tvDetailOverview = findViewById(R.id.tv_details_synopsis_content);
-        tvDetailOverview.setText(MOVIE_OVERVIEW);
+
+        // TODO : add a progressBar and error View that handle connection error.
+        loadDetails();
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @NonNull
+    @Override
+    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
+        return new MovieLoader(this, mQueryCode, MOVIE_IMDB_ID);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+
+        try {
+            currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
+            tvDetailTitle.setText(currentMovie.getTitle());
+            tvDetailVoteAverage.setText(currentMovie.getVoteAverage() + "");
+            tvDetailReleaseDate.setText(currentMovie.getReleaseDate());
+            tvDetailOverview.setText(currentMovie.getOverview());
+            String urlToPoster = TMDB_POSTER_W185_BASE_URL + currentMovie.getPosterUrl();
+            Picasso.with(this).load(urlToPoster).into(ivDetailPoster);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<String> loader) {
+
+    }
+
+    public void loadDetails(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("queryType", mQueryCode);
+        bundle.putInt("id", MOVIE_IMDB_ID);
+        LoaderManager loaderManager = getSupportLoaderManager();
+        loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }
 }

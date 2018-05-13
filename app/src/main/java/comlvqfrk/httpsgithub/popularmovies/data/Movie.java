@@ -5,29 +5,22 @@ import java.net.URL;
 
 public class Movie {
 
+    // TODO: change imdbid reference to tmdbid
     private int mImdbId;
     private String mTitle;
     private String mPosterUrl;
-    private double mVoteAverage;
-    private String mOverview;
-    private String mReleaseDate;
 
     /**
      * movie object constructor
+     * @param imdbId
      * @param title of the movie.
      * @param posterUrl path to the poster.
-     * @param voteAverage average of user's vote.
-     * @param overview synospis of the movie.
-     * @param releaseDate for the movie.
      */
-    public Movie(int imdbId, String title, String posterUrl, double voteAverage,
-                 String overview, String releaseDate) {
+    public Movie(int imdbId, String title, String posterUrl) {
         mImdbId = imdbId;
         mTitle = title;
         mPosterUrl = posterUrl;
-        mVoteAverage = voteAverage;
-        mOverview = overview;
-        mReleaseDate = releaseDate;
+
     }
 
     /**
@@ -52,29 +45,5 @@ public class Movie {
      */
     public String getPosterUrl() {
         return mPosterUrl;
-    }
-
-    /**
-     * get the vote average of users from TMDb.
-     * @return mVoteAverage
-     */
-    public double getVoteAverage() {
-        return mVoteAverage;
-    }
-
-    /**
-     * get the overview
-     * @return mOverview
-     */
-    public String getOverview() {
-        return mOverview;
-    }
-
-    /**
-     * get the release date
-     * @return mReleaseDate
-     */
-    public String getReleaseDate() {
-        return mReleaseDate;
     }
 }

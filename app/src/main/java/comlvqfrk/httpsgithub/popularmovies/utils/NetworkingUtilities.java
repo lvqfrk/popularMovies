@@ -32,6 +32,10 @@ public class NetworkingUtilities {
     private static final String MIN_VOTE_COUNT_PARAM = "vote_count.gte";
     /** param value to set a minimum of vote for query best rates */
     private static final String MIN_VOTE_COUNT_VALUE = "5000";
+    /** param for add videos link to details response */
+    private static final String APPEND_TO_RESPONSE = "append_to_response";
+    /** param value for add videos to the response */
+    private static final String VIDEOS = "videos";
 
     /**
      * build an URL for query most popular movies on TMDb.
@@ -74,12 +78,12 @@ public class NetworkingUtilities {
      * build an URL for query details of movies based on imdb'id.
      * @return URL to query movies details.
      */
-    private static URL buildUrlForDetails(int id) throws IOException {
-        // TODO (1): code this method to use the tmdb id and append video parameter.
+    private static URL buildUrlForDetails(int id){
         String urlWithId = TMDB_FIND_BY_ID_BASE_URL + id;
 
         Uri movieQueryUri = Uri.parse(urlWithId).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
+                .appendQueryParameter(APPEND_TO_RESPONSE, VIDEOS)
                 .build();
         try {
             return new URL(movieQueryUri.toString());
