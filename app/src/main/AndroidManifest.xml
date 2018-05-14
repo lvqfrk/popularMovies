@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity"
+            android:theme="@style/DetailToolBar"
             android:parentActivityName=".MainActivity"></activity>
     </application>
 

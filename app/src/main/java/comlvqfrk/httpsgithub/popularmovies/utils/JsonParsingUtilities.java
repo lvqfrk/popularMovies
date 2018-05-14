@@ -67,13 +67,14 @@ public class JsonParsingUtilities {
         double voteAverage = jsonResponse.getDouble("vote_average");
         String overview = jsonResponse.getString("overview");
         String releaseDate = jsonResponse.getString("release_date");
+        String backdrop = jsonResponse.getString("backdrop_path");
 
         JSONObject videos = jsonResponse.getJSONObject("videos");
         JSONArray videosResults = videos.getJSONArray("results");
         String trailerPath = videosResults.getJSONObject(0).getString("key");
 
         DetailedMovie movie = new DetailedMovie(id, title, posterPath, voteAverage,
-                overview, releaseDate, trailerPath);
+                overview, releaseDate, trailerPath, backdrop);
         return movie;
     }
 }

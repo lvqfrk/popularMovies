@@ -6,6 +6,7 @@ public class DetailedMovie extends Movie{
     private String mOverview;
     private String mReleaseDate;
     private String mTrailerPath;
+    private String mBackdrop;
 
     /**
      * movie object constructor
@@ -20,12 +21,13 @@ public class DetailedMovie extends Movie{
      */
     public DetailedMovie(int imdbId, String title, String posterUrl,
                          double voteAverage, String overview, String releaseDate,
-                         String trailerPath) {
+                         String trailerPath, String backdrop) {
         super(imdbId, title, posterUrl);
         mVoteAverage = voteAverage;
         mOverview = overview;
         mReleaseDate = releaseDate;
         mTrailerPath = trailerPath;
+        mBackdrop = backdrop;
     }
 
     /**
@@ -58,5 +60,13 @@ public class DetailedMovie extends Movie{
      */
     public String getTrailerPath(){
         return mTrailerPath;
+    }
+
+    /**
+     * get the backdrop path
+     * @return mBackdrop
+     */
+    public String getBackdropPath(){
+        return mBackdrop;
     }
 }
