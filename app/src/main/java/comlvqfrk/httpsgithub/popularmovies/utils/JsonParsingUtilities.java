@@ -71,10 +71,15 @@ public class JsonParsingUtilities {
 
         JSONObject videos = jsonResponse.getJSONObject("videos");
         JSONArray videosResults = videos.getJSONArray("results");
-        String trailerPath = videosResults.getJSONObject(0).getString("key");
+        String trailerPath;
+        if (videosResults.length() > 1){
+            trailerPath = videosResults.getJSONObject(0).getString("key");
+        } else {
+            trailerPath = "no_result";
+        }
 
-        DetailedMovie movie = new DetailedMovie(id, title, posterPath, voteAverage,
+
+        return new DetailedMovie(id, title, posterPath, voteAverage,
                 overview, releaseDate, trailerPath, backdrop);
-        return movie;
     }
 }

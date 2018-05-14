@@ -34,6 +34,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private final int TMDB_LOADER_ID = 22;
 
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+
     private ImageView ivBackdrop;
     private TextView tvDetailTitle;
     private TextView tvDetailVoteAverage;
@@ -56,8 +58,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         ViewCompat.setTransitionName(findViewById(R.id.appBarLayout), "Name");
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle("Titre");
+        collapsingToolbarLayout =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle("title");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         Intent incIntent = getIntent();
@@ -98,6 +101,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         try {
             currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
+
+            collapsingToolbarLayout.setTitle(currentMovie.getTitle());
             tvDetailTitle.setText(currentMovie.getTitle());
             tvDetailVoteAverage.setText(currentMovie.getVoteAverage() + "");
             tvDetailReleaseDate.setText(currentMovie.getReleaseDate());
