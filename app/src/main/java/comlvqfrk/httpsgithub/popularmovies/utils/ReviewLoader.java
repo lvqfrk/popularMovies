@@ -1,8 +1,9 @@
 package comlvqfrk.httpsgithub.popularmovies.utils;
 
-import android.content.AsyncTaskLoader;
+//import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.content.AsyncTaskLoader;
 
 import java.io.IOException;
 

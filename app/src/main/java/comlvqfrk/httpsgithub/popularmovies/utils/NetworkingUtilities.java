@@ -37,7 +37,7 @@ public class NetworkingUtilities {
     /** param value for add videos to the response */
     private static final String VIDEOS = "videos";
     /** keyword to get reviews based on a movie id*/
-    private static final String REVIEWS = "reviews";
+    private static final String REVIEWS = "/reviews";
     /** param keyword for select a page of reponse content*/
     private static final String PAGE = "page";
 

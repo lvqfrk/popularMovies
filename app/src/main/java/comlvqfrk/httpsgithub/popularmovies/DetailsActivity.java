@@ -23,9 +23,13 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
+import java.util.List;
+
 import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
+import comlvqfrk.httpsgithub.popularmovies.data.Review;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
+import comlvqfrk.httpsgithub.popularmovies.utils.ReviewLoader;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
 
@@ -39,6 +43,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private static final int mQueryCode = 150;
 
     private final int TMDB_LOADER_ID = 22;
+
+    private final int TMDB_REVIEW_LOADER_ID = 44;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -58,8 +64,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private TextView tvThirdReviewAuthor;
     private TextView tvThirdReviewContent;
 
-    // data from Itent
+    // data from Intent
     private int MOVIE_IMDB_ID;
+
     private DetailedMovie currentMovie;
 
     // Intent to watch trailer
@@ -99,6 +106,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 }
             }
         });
+
         // Details : title, release date, vote, poster image.
         tvDetailTitle = findViewById(R.id.tv_details_title);
         tvDetailVoteAverage = findViewById(R.id.tv_details_vote_average);
@@ -115,6 +123,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         tvSecondReviewContent = findViewById(R.id.tv_second_review_content);
         tvThirdReviewAuthor = findViewById(R.id.tv_third_review_author);
         tvThirdReviewContent = findViewById(R.id.tv_third_review_content);
+        loadReviews();
+
+
     }
 
     @Override
@@ -144,38 +155,78 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     @NonNull
     @Override
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new MovieLoader(this, mQueryCode, MOVIE_IMDB_ID);
+        if (id == TMDB_LOADER_ID) {
+            return new MovieLoader(this, mQueryCode, MOVIE_IMDB_ID);
+        } else if (id == TMDB_REVIEW_LOADER_ID) {
+            return new ReviewLoader(this, MOVIE_IMDB_ID);
+        } else {
+            return null;
+        }
+
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
 
-        try {
-            currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
+        if (loader.getId() == TMDB_LOADER_ID) {
+            try {
+                currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
 
-            collapsingToolbarLayout.setTitle(currentMovie.getTitle());
-            tvDetailTitle.setText(currentMovie.getTitle());
-            tvDetailVoteAverage.setText(currentMovie.getVoteAverage() + "");
-            tvDetailReleaseDate.setText(currentMovie.getReleaseDate());
-            tvDetailOverview.setText(currentMovie.getOverview());
-            String urlToPoster = TMDB_POSTER_W185_BASE_URL + currentMovie.getPosterUrl();
-            Picasso.with(this).load(urlToPoster).into(ivDetailPoster);
-            String urlToBackdrop = TMDB_BACKDROP_W1280_BASE_URL + currentMovie.getBackdropPath();
-            Picasso.with(this).load(urlToBackdrop).into(ivBackdrop);
+                collapsingToolbarLayout.setTitle(currentMovie.getTitle());
+                tvDetailTitle.setText(currentMovie.getTitle());
+                tvDetailVoteAverage.setText(currentMovie.getVoteAverage() + "");
+                tvDetailReleaseDate.setText(currentMovie.getReleaseDate());
+                tvDetailOverview.setText(currentMovie.getOverview());
+                String urlToPoster = TMDB_POSTER_W185_BASE_URL + currentMovie.getPosterUrl();
+                Picasso.with(this).load(urlToPoster).into(ivDetailPoster);
+                String urlToBackdrop = TMDB_BACKDROP_W1280_BASE_URL + currentMovie.getBackdropPath();
+                Picasso.with(this).load(urlToBackdrop).into(ivBackdrop);
 
-            String trailerPath = currentMovie.getTrailerPath();
-            if(trailerPath == "no_result") {
-                ivBtnPlay.setVisibility(View.GONE);
-            } else {
-                String trailerUrl = YOUTUBE_BASE_URL + trailerPath;
-                trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
-                shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, trailerUrl);
-                shareIntent.setType("text/plain");
+                String trailerPath = currentMovie.getTrailerPath();
+                if(trailerPath == "no_result") {
+                    ivBtnPlay.setVisibility(View.GONE);
+                } else {
+                    String trailerUrl = YOUTUBE_BASE_URL + trailerPath;
+                    trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+                    shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, trailerUrl);
+                    shareIntent.setType("text/plain");
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else if (loader.getId() == TMDB_REVIEW_LOADER_ID) {
+            System.out.println(data);
+            if (data == null) return;
+            List<Review> reviews;
+            try {
+                reviews = JsonParsingUtilities.extractReviewFromJsonResponse(data);
+                if (reviews.size() >= 3) {
+                    tvFirstReviewAuthor.setText(reviews.get(0).getReviewAuthor());
+                    tvFirstReviewContent.setText(reviews.get(0).getReviewContent());
+                    tvSecondReviewAuthor.setText(reviews.get(1).getReviewAuthor());
+                    tvSecondReviewContent.setText(reviews.get(1).getReviewContent());
+                    tvThirdReviewAuthor.setText(reviews.get(2).getReviewAuthor());
+                    tvThirdReviewContent.setText(reviews.get(2).getReviewContent());
+                } else if (reviews.size() == 2) {
+                    tvFirstReviewAuthor.setText(reviews.get(0).getReviewAuthor());
+                    tvFirstReviewContent.setText(reviews.get(0).getReviewContent());
+                    tvSecondReviewAuthor.setText(reviews.get(1).getReviewAuthor());
+                    tvSecondReviewContent.setText(reviews.get(1).getReviewContent());
+                    tvThirdReviewAuthor.setVisibility(View.GONE);
+                    tvThirdReviewContent.setVisibility(View.GONE);
+                } else {
+                    tvFirstReviewAuthor.setText(reviews.get(0).getReviewAuthor());
+                    tvFirstReviewContent.setText(reviews.get(0).getReviewContent());
+                    tvSecondReviewAuthor.setVisibility(View.GONE);
+                    tvSecondReviewContent.setVisibility(View.GONE);
+                    tvThirdReviewAuthor.setVisibility(View.GONE);
+                    tvThirdReviewContent.setVisibility(View.GONE);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -192,4 +243,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }
 
+    public void loadReviews(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", MOVIE_IMDB_ID);
+        LoaderManager loaderManager = getSupportLoaderManager();
+        loaderManager.restartLoader(TMDB_REVIEW_LOADER_ID, bundle, this);
+    }
 }
