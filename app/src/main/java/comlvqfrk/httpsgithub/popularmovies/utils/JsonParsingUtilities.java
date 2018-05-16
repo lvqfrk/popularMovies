@@ -59,6 +59,7 @@ public class JsonParsingUtilities {
         }
     }
 
+    // TODO: use final vars for parsing this Json
     public static DetailedMovie extractDetailsFromJsonResponse(String jsonResponseStr) throws JSONException{
         JSONObject jsonResponse = new JSONObject(jsonResponseStr);
         int id = jsonResponse.getInt("id");
@@ -77,7 +78,6 @@ public class JsonParsingUtilities {
         } else {
             trailerPath = "no_result";
         }
-
 
         return new DetailedMovie(id, title, posterPath, voteAverage,
                 overview, releaseDate, trailerPath, backdrop);

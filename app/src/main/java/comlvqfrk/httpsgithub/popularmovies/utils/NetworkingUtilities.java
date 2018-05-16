@@ -36,6 +36,10 @@ public class NetworkingUtilities {
     private static final String APPEND_TO_RESPONSE = "append_to_response";
     /** param value for add videos to the response */
     private static final String VIDEOS = "videos";
+    /** keyword to get reviews based on a movie id*/
+    private static final String REVIEWS = "reviews";
+    /** param keyword for select a page of reponse content*/
+    private static final String PAGE = "page";
 
     /**
      * build an URL for query most popular movies on TMDb.
@@ -93,6 +97,21 @@ public class NetworkingUtilities {
         }
     }
 
+    private static URL buildUrlForReviews(int id){
+        String urlForReviews = TMDB_FIND_BY_ID_BASE_URL + id + REVIEWS;
+
+        Uri reviewsQueryUri = Uri.parse(urlForReviews).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
+                .build();
+
+        try {
+            return new URL(reviewsQueryUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * this method return the entire Json result from Http response.
      * @return Json data into a String
@@ -138,9 +157,39 @@ public class NetworkingUtilities {
      * @return Json data into a String
      * @throws IOException
      */
-    public static String getJsonForDetails(int id) throws IOException{
+    public static String getJsonForDetails(int id) throws IOException {
 
         URL queryUrl = buildUrlForDetails(id);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
+        try{
+            InputStream in = urlConnection.getInputStream();
+            Scanner scan = new Scanner(in);
+            // setting the delimiter to \A force the scanner to read the entire content
+            // of the stream into the next token stream.
+            scan.useDelimiter("\\A");
+            // check if there is data to scan.
+            boolean hasInput = scan.hasNext();
+            if (hasInput) {
+                return scan.next();
+            } else {
+                return null;
+            }
+        }finally {
+            // close the connection.
+            urlConnection.disconnect();
+        }
+    }
+
+
+    /**
+     * this method return a Json result with reviews.
+     * @param id of the movie
+     * @return String containing the reviews in JSON.
+     * @throws IOException
+     */
+    public static String getJsonForReviews(int id) throws IOException {
+        URL queryUrl = buildUrlForReviews(id);
 
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{

@@ -50,6 +50,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private ImageView ivDetailPoster;
     private TextView tvDetailOverview;
 
+    // Review
+    private TextView tvFirstReviewAuthor;
+    private TextView tvFirstReviewContent;
+    private TextView tvSecondReviewAuthor;
+    private TextView tvSecondReviewContent;
+    private TextView tvThirdReviewAuthor;
+    private TextView tvThirdReviewContent;
+
     // data from Itent
     private int MOVIE_IMDB_ID;
     private DetailedMovie currentMovie;
@@ -91,20 +99,22 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 }
             }
         });
-
-        // title TextView
+        // Details : title, release date, vote, poster image.
         tvDetailTitle = findViewById(R.id.tv_details_title);
-        // Vote average TextView
         tvDetailVoteAverage = findViewById(R.id.tv_details_vote_average);
-        // release date TextView
         tvDetailReleaseDate = findViewById(R.id.tv_details_release_release_date);
-        // poster ImageView
         ivDetailPoster = findViewById(R.id.iv_details_poster);
-        // overview TextView
         tvDetailOverview = findViewById(R.id.tv_details_synopsis_content);
-
         // TODO : add a progressBar and error View that handle connection error.
         loadDetails();
+
+        // Reviews
+        tvFirstReviewAuthor = findViewById(R.id.tv_first_review_author);
+        tvFirstReviewContent = findViewById(R.id.tv_first_review_content);
+        tvSecondReviewAuthor = findViewById(R.id.tv_second_review_author);
+        tvSecondReviewContent = findViewById(R.id.tv_second_review_content);
+        tvThirdReviewAuthor = findViewById(R.id.tv_third_review_author);
+        tvThirdReviewContent = findViewById(R.id.tv_third_review_content);
     }
 
     @Override
