@@ -9,6 +9,7 @@ import java.util.List;
 
 import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
+import comlvqfrk.httpsgithub.popularmovies.data.Review;
 
 public class JsonParsingUtilities {
 
@@ -26,10 +27,14 @@ public class JsonParsingUtilities {
     private static final String KEY_OVERVIEW = "overview";
     /** keyword for extract release date from JSon */
     private static final String KEY_RELEASE_DATE = "release_date";
+    /** keyword for extract author name from json reviews */
+    private static final String KEY_REVIEW_AUTHOR = "author";
+    /** keyword for extract content from json reviews */
+    private static final String KEY_REVIEW_CONTENT = "content";
 
 
     /**
-     * this method will extract the needed data from Json returned in the http reponse.
+     * this method extract the needed data from Json returned in the http reponse.
      * @param jsonResponseStr returned by NetworkingUtilities. getJsonReponseFromHttpUrl.
      * @return a List of Movie.
      * @throws JSONException
@@ -60,6 +65,13 @@ public class JsonParsingUtilities {
     }
 
     // TODO: use final vars for parsing this Json
+
+    /**
+     * this method extract details for a movie from a json.
+     * @param jsonResponseStr
+     * @return a DetailedMovie
+     * @throws JSONException
+     */
     public static DetailedMovie extractDetailsFromJsonResponse(String jsonResponseStr) throws JSONException{
         JSONObject jsonResponse = new JSONObject(jsonResponseStr);
         int id = jsonResponse.getInt("id");
@@ -81,5 +93,30 @@ public class JsonParsingUtilities {
 
         return new DetailedMovie(id, title, posterPath, voteAverage,
                 overview, releaseDate, trailerPath, backdrop);
+    }
+
+    /**
+     * this method return a List of review for a movie from a Json response.
+     * @param jsonResponseStr
+     * @return a list of Reviews or null if no reviews available
+     * @throws JSONException
+     */
+    public static List<Review> extractReviewFromJsonResponse(String jsonResponseStr) throws JSONException {
+        List<Review> reviews = new ArrayList<>();
+        JSONObject jsonResponse = new JSONObject(jsonResponseStr);
+        JSONArray results = jsonResponse.getJSONArray(KEY_RESULTS);
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject currentReview = results.getJSONObject(i);
+            String author = currentReview.getString(KEY_REVIEW_AUTHOR);
+            String content = currentReview.getString(KEY_REVIEW_CONTENT);
+            Review newReview = new Review(author, content);
+            reviews.add(newReview);
+        }
+
+        if (!(reviews.isEmpty())){
+            return reviews;
+        } else {
+            return null;
+        }
     }
 }
