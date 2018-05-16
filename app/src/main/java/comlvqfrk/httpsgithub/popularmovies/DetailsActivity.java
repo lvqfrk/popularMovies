@@ -167,7 +167,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-
+        // loader for details about the movie
         if (loader.getId() == TMDB_LOADER_ID) {
             try {
                 currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
@@ -196,12 +196,23 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else if (loader.getId() == TMDB_REVIEW_LOADER_ID) {
-            System.out.println(data);
-            if (data == null) return;
+        }
+        // Loader for reviews
+        else if (loader.getId() == TMDB_REVIEW_LOADER_ID) {
+
+
             List<Review> reviews;
             try {
                 reviews = JsonParsingUtilities.extractReviewFromJsonResponse(data);
+                if (reviews == null || reviews.isEmpty()) {
+                    tvFirstReviewContent.setText("No review avalaible.");
+                    tvFirstReviewAuthor.setVisibility(View.GONE);
+                    tvSecondReviewAuthor.setVisibility(View.GONE);
+                    tvSecondReviewContent.setVisibility(View.GONE);
+                    tvThirdReviewAuthor.setVisibility(View.GONE);
+                    tvThirdReviewContent.setVisibility(View.GONE);
+                }
+
                 if (reviews.size() >= 3) {
                     tvFirstReviewAuthor.setText(reviews.get(0).getReviewAuthor());
                     tvFirstReviewContent.setText(reviews.get(0).getReviewContent());
@@ -216,9 +227,16 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     tvSecondReviewContent.setText(reviews.get(1).getReviewContent());
                     tvThirdReviewAuthor.setVisibility(View.GONE);
                     tvThirdReviewContent.setVisibility(View.GONE);
-                } else {
+                } else if (reviews.size() == 1) {
                     tvFirstReviewAuthor.setText(reviews.get(0).getReviewAuthor());
                     tvFirstReviewContent.setText(reviews.get(0).getReviewContent());
+                    tvSecondReviewAuthor.setVisibility(View.GONE);
+                    tvSecondReviewContent.setVisibility(View.GONE);
+                    tvThirdReviewAuthor.setVisibility(View.GONE);
+                    tvThirdReviewContent.setVisibility(View.GONE);
+                } else {
+                    tvFirstReviewAuthor.setVisibility(View.GONE);
+                    tvFirstReviewContent.setText("No review avalaible.");
                     tvSecondReviewAuthor.setVisibility(View.GONE);
                     tvSecondReviewContent.setVisibility(View.GONE);
                     tvThirdReviewAuthor.setVisibility(View.GONE);

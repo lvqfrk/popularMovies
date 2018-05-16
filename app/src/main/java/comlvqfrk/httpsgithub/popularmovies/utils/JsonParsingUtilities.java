@@ -105,6 +105,7 @@ public class JsonParsingUtilities {
         List<Review> reviews = new ArrayList<>();
         JSONObject jsonResponse = new JSONObject(jsonResponseStr);
         JSONArray results = jsonResponse.getJSONArray(KEY_RESULTS);
+        if (results.length() == 0) return reviews;
         for (int i = 0; i < results.length(); i++) {
             JSONObject currentReview = results.getJSONObject(i);
             String author = currentReview.getString(KEY_REVIEW_AUTHOR);
