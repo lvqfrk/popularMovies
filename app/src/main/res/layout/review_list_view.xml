@@ -7,6 +7,7 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/tv_reviews_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -17,6 +18,7 @@
         tools:text="Noel Flantier"/>
 
     <TextView
+        android:id="@+id/tv_review_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mauris orci, maximus at eros eu, malesuada sagittis massa. Nunc at tortor lorem. Mauris eget placerat arcu, sed gravida enim. Cras cursus neque sit amet purus vestibulum pharetra. Vivamus a egestas libero. Vivamus et justo vel lorem cursus ultrices. In hac habitasse platea dictumst. Vestibulum euismod neque in suscipit suscipit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec at elementum arcu, quis suscipit dui. Aliquam arcu massa, sagittis sed hendrerit et, viverra non lorem. Praesent ultrices ante vel augue porta cursus."/>

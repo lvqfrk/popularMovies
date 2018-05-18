@@ -46,6 +46,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private final int TMDB_REVIEW_LOADER_ID = 44;
 
+    private View vReview;
+
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
     private ImageView ivBackdrop;
@@ -63,6 +65,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private TextView tvSecondReviewContent;
     private TextView tvThirdReviewAuthor;
     private TextView tvThirdReviewContent;
+    private TextView tvShowReview;
 
     // data from Intent
     private int MOVIE_IMDB_ID;
@@ -125,6 +128,17 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         tvThirdReviewContent = findViewById(R.id.tv_third_review_content);
         loadReviews();
 
+        tvShowReview = findViewById(R.id.tv_show_reviews);
+
+
+        tvShowReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent reviewsIntent = new Intent(getApplicationContext(), ReviewsActivity.class);
+                reviewsIntent.putExtra("movieId", MOVIE_IMDB_ID);
+                startActivity(reviewsIntent);
+            }
+        });
 
     }
 
@@ -267,4 +281,5 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.restartLoader(TMDB_REVIEW_LOADER_ID, bundle, this);
     }
+
 }

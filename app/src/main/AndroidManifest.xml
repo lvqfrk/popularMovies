@@ -24,9 +24,12 @@
         </activity>
         <activity
             android:name=".DetailsActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
             android:theme="@style/DetailToolBar" />
-        <activity android:name=".ReviewsActivity"></activity>
+        <activity android:name=".ReviewsActivity"
+            android:parentActivityName=".DetailsActivity"
+            ></activity>
     </application>
 
 </manifest>
