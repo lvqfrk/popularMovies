@@ -19,6 +19,8 @@ public class MovieLoader extends AsyncTaskLoader <String>{
 
     private static int mImdbId;
 
+    private static String mUserSearchKeyword;
+
     /** use as cache for httpResponse */
     private String mData;
 
@@ -28,6 +30,14 @@ public class MovieLoader extends AsyncTaskLoader <String>{
         mQueryCode = queryCode;
     }
 
+    /** Constructor for load movie from user search query */
+    public MovieLoader(Context context, int queryCode, String userSearchKeyword) {
+        super(context);
+        mQueryCode = queryCode;
+        mUserSearchKeyword = userSearchKeyword;
+    }
+
+    /** Constructor for load movie details*/
     public MovieLoader(Context context, int queryCode, int imdbId) {
         super(context);
         mQueryCode = queryCode;
@@ -50,10 +60,18 @@ public class MovieLoader extends AsyncTaskLoader <String>{
         switch (mQueryCode){
             // queryCode 100 for searching most popular.
             case 100:
-            // queryCode 102 for highest rated.
+            // queryCode 101 for highest rated.
             case 101:
                 try {
                     return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            // query code 102 for user's search query
+            case 102:
+                try{
+                    return NetworkingUtilities.getJsonForUserSearch(mUserSearchKeyword);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

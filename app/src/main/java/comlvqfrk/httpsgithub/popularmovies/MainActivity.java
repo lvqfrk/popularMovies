@@ -34,6 +34,7 @@ import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>, MovieAdapter.MovieAdapterOnClickHandler{
 
+    //TODO : handle cases where there is no poster for the movie.
     private final int TMDB_LOADER_ID = 22;
 
     private MovieAdapter mMovieAdapter;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private SearchView mSvSearch;
     private boolean connectivityState = false;
     private int mQueryPref = 100;
+    private String mUserSearchQuery;
 
     private String mData = null;
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mFabSearch = (FloatingActionButton) findViewById(R.id.fab_search);
         mFabSearch.setOnClickListener(new View.OnClickListener() {
+            // TODO: make it clean
             @Override
             public void onClick(View v) {
                 getSupportActionBar().hide();
@@ -67,7 +70,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         getSupportActionBar().show();
                         mSvSearch.setVisibility(View.GONE);
                         mFabSearch.setVisibility(View.VISIBLE);
+                        mUserSearchQuery = mSvSearch.getQuery().toString();
                         Toast.makeText(getApplicationContext(), "searching...", Toast.LENGTH_SHORT).show();
+                        loadMovies(102);
                         return false;
                     }
 
@@ -177,7 +182,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
             int queryType = args.getInt("queryType");
-            return new MovieLoader(this, queryType);
+            switch (queryType){
+                case 102:
+                    return new MovieLoader(this, queryType, mUserSearchQuery);
+                default:
+                    return new MovieLoader(this, queryType);
+            }
+
     }
 
     @Override

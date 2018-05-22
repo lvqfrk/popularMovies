@@ -39,8 +39,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_main_screen"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/rv_main_screen"
         app:layout_constraintStart_toStartOf="@+id/rv_main_screen"
         app:layout_constraintTop_toTopOf="@+id/rv_main_screen" />

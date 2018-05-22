@@ -14,12 +14,17 @@ import javax.net.ssl.HttpsURLConnection;
 public class NetworkingUtilities {
 
     private static final String TAG = NetworkingUtilities.class.getSimpleName();
+
+    /** Base Url to show movie bases on keyword from users */
+    private static final String TMDB_FIND_BY_TITLE_BASE_URL = "https://api.themoviedb.org/3/search/movie";
     /** Base Url to find movie by ID */
     private static final String TMDB_FIND_BY_ID_BASE_URL = "https://api.themoviedb.org/3/movie/";
     /** Base URL for discover features of the API (TMDB for The Movie DataBase) */
     private static final String TMDB_DISCOVER_BASE_URL = "https://api.themoviedb.org/3/discover/movie";
     /** param keyword for api key */
     private static final String API_KEY_PARAM = "api_key";
+    /** param keyword for user's query*/
+    private static final String QUERY_PARAM = "query";
     /** param keyword for sorting */
     private static final String SORT_BY_PARAM = "sort_by";
     /** param keyword for displaying adult content */
@@ -40,6 +45,26 @@ public class NetworkingUtilities {
     private static final String REVIEWS = "/reviews";
     /** param keyword for select a page of reponse content*/
     private static final String PAGE = "page";
+
+    /**
+     * build an URL for query movies based on user's keyword.
+     * @param userQuery the keyword from the user
+     * @return URL to use to query the movie db
+     */
+    private static URL buildUrlForUserSearch(String userQuery) {
+        Uri movieQueryUri = Uri.parse(TMDB_FIND_BY_TITLE_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
+                .appendQueryParameter(QUERY_PARAM, userQuery)
+                .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
+                .build();
+
+        try {
+            return new URL(movieQueryUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     /**
      * build an URL for query most popular movies on TMDb.
@@ -97,6 +122,11 @@ public class NetworkingUtilities {
         }
     }
 
+    /**
+     * build an URL for get reviews from TMDB based on movie's id.
+     * @param id of the movie
+     * @return URL to get reviews
+     */
     private static URL buildUrlForReviews(int id){
         String urlForReviews = TMDB_FIND_BY_ID_BASE_URL + id + REVIEWS;
 
@@ -109,6 +139,35 @@ public class NetworkingUtilities {
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * get the JSON response to get a list of movie based on the user's query.
+     * @param userQuery keyword from the user.
+     * @return String json response
+     * @throws IOException
+     */
+    public static String getJsonForUserSearch(String userQuery) throws IOException {
+        URL queryUrl = buildUrlForUserSearch(userQuery);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
+        try{
+            InputStream in = urlConnection.getInputStream();
+            Scanner scan = new Scanner(in);
+            // setting the delimiter to \A force the scanner to read the entire content
+            // of the stream into the next token stream.
+            scan.useDelimiter("\\A");
+            // check if there is data to scan.
+            boolean hasInput = scan.hasNext();
+            if (hasInput) {
+                return scan.next();
+            } else {
+                return null;
+            }
+        }finally {
+            // close the connection.
+            urlConnection.disconnect();
         }
     }
 
