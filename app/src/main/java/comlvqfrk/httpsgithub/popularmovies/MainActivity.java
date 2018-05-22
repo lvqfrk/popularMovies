@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,14 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private TextView mTvInternetError;
+    private FloatingActionButton mFabSearch;
+    private SearchView mSvSearch;
     private boolean connectivityState = false;
     private int mQueryPref = 100;
 
@@ -46,6 +51,42 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFabSearch = (FloatingActionButton) findViewById(R.id.fab_search);
+        mFabSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportActionBar().hide();
+                mFabSearch.setVisibility(View.GONE);
+                mSvSearch = findViewById(R.id.sv_search);
+                mSvSearch.setVisibility(View.VISIBLE);
+                mSvSearch.setIconified(false);
+                mSvSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        getSupportActionBar().show();
+                        mSvSearch.setVisibility(View.GONE);
+                        mFabSearch.setVisibility(View.VISIBLE);
+                        Toast.makeText(getApplicationContext(), "searching...", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        return false;
+                    }
+                });
+                mSvSearch.setOnCloseListener(new SearchView.OnCloseListener() {
+                    @Override
+                    public boolean onClose() {
+                        getSupportActionBar().show();
+                        mSvSearch.setVisibility(View.GONE);
+                        mFabSearch.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                });
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_main_screen);
         mRecyclerView.setVisibility(View.GONE);
@@ -76,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         } else {
             mProgressBar.setVisibility(View.GONE);
+            mFabSearch.setVisibility(View.GONE);
             mTvInternetError.setVisibility(View.VISIBLE);
         }
     }
