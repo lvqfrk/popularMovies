@@ -1,8 +1,9 @@
 package comlvqfrk.httpsgithub.popularmovies;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +49,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         String title = mMovies.get(position).getTitle();
         holder.tvTitle.setText(title);
         holder.tvTitle.setTag(position);
+
+        // show tvTitle depending of user's preference
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (prefs.getBoolean("show_titles", true)){
+            holder.tvTitle.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvTitle.setVisibility(View.INVISIBLE);
+        }
+
         String posterUrl = TMDB_POSTER_W185_BASE_URL + mMovies.get(position).getPosterUrl();
         Picasso.with(mContext).load(posterUrl).into(holder.ivPoster);
-
     }
 
     @Override

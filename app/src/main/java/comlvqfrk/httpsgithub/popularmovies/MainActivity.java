@@ -2,6 +2,7 @@ package comlvqfrk.httpsgithub.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -31,7 +32,9 @@ import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>, MovieAdapter.MovieAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,
+        MovieAdapter.MovieAdapterOnClickHandler,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     //TODO : handle cases where there is no poster for the movie.
     private final int TMDB_LOADER_ID = 22;
@@ -61,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mTvInternetError = (TextView) findViewById(R.id.tv_main_error_internet);
         connectivityState = isNetworkAvailable();
-
 
         if (connectivityState) {
             // Create a new Grid Layout manager, with 2 columns and vertical scrolling
@@ -131,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 loadMovies(mQueryPref);
                 return true;
             case R.id.me_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -213,5 +217,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Intent detailIntent = new Intent(this, DetailsActivity.class);
         detailIntent.putExtra("IMDB_ID", currentMovie.getImdbId());
         startActivity(detailIntent);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("show_titles")){
+            try {
+                List<Movie> movies = JsonParsingUtilities.extractMoviesFromJson(mData);
+                mMovieAdapter.swapMovies(movies);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
