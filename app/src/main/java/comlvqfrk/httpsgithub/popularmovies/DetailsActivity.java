@@ -193,7 +193,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 Picasso.with(this).load(urlToBackdrop).into(ivBackdrop);
 
                 String trailerPath = currentMovie.getTrailerPath();
-                if(trailerPath.equals(getString(R.string.trailer_no_result))) {
+                if(trailerPath == null) {
                     ivBtnPlay.setVisibility(View.GONE);
                 } else {
                     String trailerUrl = YOUTUBE_BASE_URL + trailerPath;

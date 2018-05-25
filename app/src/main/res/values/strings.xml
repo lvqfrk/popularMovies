@@ -39,8 +39,6 @@
     <string name="bundle_key_movie_id" translatable="false">IMDB_ID</string>
     <!--key for save Json response in bundle, used when activity is recreated -->
     <string name="bundle_key_callback" translatable="false">callback</string>
-    <!--response for trailer path if not available-->
-    <string name="trailer_no_result">no_result</string>
     <!--type of intent  for share trailer-->
     <string name="share_intent_type">text/plain</string>
 

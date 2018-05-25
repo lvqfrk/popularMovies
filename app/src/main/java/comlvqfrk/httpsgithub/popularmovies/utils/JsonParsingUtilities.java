@@ -95,7 +95,7 @@ public class JsonParsingUtilities {
         if (videosResults.length() > 1){
             trailerPath = videosResults.getJSONObject(0).getString(KEY_KEY);
         } else {
-            trailerPath = Resources.getSystem().getString(R.string.trailer_no_result);
+            trailerPath = null;
         }
 
         return new DetailedMovie(id, title, posterPath, voteAverage,
