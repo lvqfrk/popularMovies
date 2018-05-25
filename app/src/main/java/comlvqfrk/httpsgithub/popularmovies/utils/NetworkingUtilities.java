@@ -1,7 +1,6 @@
 package comlvqfrk.httpsgithub.popularmovies.utils;
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
 
 
 import java.io.IOException;
@@ -14,6 +13,15 @@ import javax.net.ssl.HttpsURLConnection;
 public class NetworkingUtilities {
 
     private static final String TAG = NetworkingUtilities.class.getSimpleName();
+
+    /**code 100 used to query most popular */
+    public static final int QUERY_CODE_MOST_POPULAR = 100;
+    /** code 102 used to query highest rated */
+    public static final int QUERY_CODE_HIGHEST_RATED = 101;
+    /** code 102 used to search by title query */
+    public static final int QUERY_CODE_SEARCH_BY_TITLE = 102;
+    /** code 150 used to query for details */
+    public static final int QUERY_CODE_GET_DETAILS = 150;
 
     /** Base Url to show movie bases on keyword from users */
     private static final String TMDB_FIND_BY_TITLE_BASE_URL = "https://api.themoviedb.org/3/search/movie";
@@ -43,7 +51,7 @@ public class NetworkingUtilities {
     private static final String VIDEOS = "videos";
     /** keyword to get reviews based on a movie id*/
     private static final String REVIEWS = "/reviews";
-    /** param keyword for select a page of reponse content*/
+    /** param keyword for select a page of reponse content, NOT USED FOR NOW*/
     private static final String PAGE = "page";
 
     /**
@@ -151,6 +159,7 @@ public class NetworkingUtilities {
     public static String getJsonForUserSearch(String userQuery) throws IOException {
         URL queryUrl = buildUrlForUserSearch(userQuery);
 
+        assert queryUrl != null;
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{
             InputStream in = urlConnection.getInputStream();
@@ -180,16 +189,17 @@ public class NetworkingUtilities {
 
         URL queryUrl;
         switch (queryCode){
-            case 100:
+            case QUERY_CODE_MOST_POPULAR:
                 queryUrl = buildUrlForMostPopular();
                 break;
-            case 101:
+            case QUERY_CODE_HIGHEST_RATED:
                 queryUrl = buildUrlForHighestRated();
                 break;
             default:
                 queryUrl = buildUrlForMostPopular();
         }
 
+        assert queryUrl != null;
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{
             InputStream in = urlConnection.getInputStream();
@@ -220,6 +230,7 @@ public class NetworkingUtilities {
 
         URL queryUrl = buildUrlForDetails(id);
 
+        assert queryUrl != null;
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{
             InputStream in = urlConnection.getInputStream();
@@ -250,6 +261,7 @@ public class NetworkingUtilities {
     public static String getJsonForReviews(int id) throws IOException {
         URL queryUrl = buildUrlForReviews(id);
 
+        assert queryUrl != null;
         HttpsURLConnection urlConnection = (HttpsURLConnection) queryUrl.openConnection();
         try{
             InputStream in = urlConnection.getInputStream();

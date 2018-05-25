@@ -15,7 +15,7 @@ public class MovieLoader extends AsyncTaskLoader <String>{
     /** Tag for log messages  */
     private static final String LOG_TAG = MovieLoader.class.getName();
 
-    private static int mQueryCode = 100;
+    private static int mQueryCode = NetworkingUtilities.QUERY_CODE_MOST_POPULAR;
 
     private static int mImdbId;
 
@@ -59,9 +59,9 @@ public class MovieLoader extends AsyncTaskLoader <String>{
 
         switch (mQueryCode){
             // queryCode 100 for searching most popular.
-            case 100:
+            case NetworkingUtilities.QUERY_CODE_MOST_POPULAR:
             // queryCode 101 for highest rated.
-            case 101:
+            case NetworkingUtilities.QUERY_CODE_HIGHEST_RATED:
                 try {
                     return NetworkingUtilities.getJsonForMainScreen(mQueryCode);
                 } catch (IOException e) {
@@ -69,7 +69,7 @@ public class MovieLoader extends AsyncTaskLoader <String>{
                     return null;
                 }
             // query code 102 for user's search query
-            case 102:
+            case NetworkingUtilities.QUERY_CODE_SEARCH_BY_TITLE:
                 try{
                     return NetworkingUtilities.getJsonForUserSearch(mUserSearchKeyword);
                 } catch (IOException e) {
@@ -77,7 +77,7 @@ public class MovieLoader extends AsyncTaskLoader <String>{
                     return null;
                 }
             // queryCode 150 for searching movie's detail.
-            case 150:
+            case NetworkingUtilities.QUERY_CODE_GET_DETAILS:
                 try {
                     return NetworkingUtilities.getJsonForDetails(mImdbId);
                 } catch (IOException e) {

@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -30,25 +29,22 @@ import java.util.List;
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
+import comlvqfrk.httpsgithub.popularmovies.utils.NetworkingUtilities;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,
         MovieAdapter.MovieAdapterOnClickHandler,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
-    //TODO : handle cases where there is no poster for the movie.
-    private final int TMDB_LOADER_ID = 22;
-
     private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    private TextView mTvInternetError;
 
     private boolean connectivityState = false;
-    private int mQueryPref = 100;
-
+    /** Base query type when apps is started */
+    private int mQueryPref = NetworkingUtilities.QUERY_CODE_MOST_POPULAR;
     private String mUserSearchQuery;
-
+    /** for save JsonStr response if activity is recreated (changing orientation of the device...)*/
     private String mData = null;
 
     @Override
@@ -56,13 +52,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_main_screen);
+        mRecyclerView = findViewById(R.id.rv_main_screen);
         mRecyclerView.setVisibility(View.GONE);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.pb_main_loading);
+        mProgressBar = findViewById(R.id.pb_main_loading);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        mTvInternetError = (TextView) findViewById(R.id.tv_main_error_internet);
+        TextView mTvInternetError = findViewById(R.id.tv_main_error_internet);
         connectivityState = isNetworkAvailable();
 
         if (connectivityState) {
@@ -75,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mRecyclerView.setAdapter(mMovieAdapter);
 
             if (savedInstanceState != null) {
-                mData = savedInstanceState.getString("callback");
+                mData = savedInstanceState.getString(getString(R.string.bundle_key_callback));
             }else {
                 loadMovies(mQueryPref);
             }
@@ -97,13 +93,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             SearchView searchView = (SearchView) searchItem.getActionView();
             searchView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             searchView.setIconifiedByDefault(false);
-            searchView.setQueryHint("Search a Movie");
+            searchView.setQueryHint(getString(R.string.hint_search_query));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    Toast.makeText(MainActivity.this, "search...", Toast.LENGTH_SHORT).show();
                     mUserSearchQuery = query;
-                    loadMovies(102);
+                    loadMovies(NetworkingUtilities.QUERY_CODE_SEARCH_BY_TITLE);
                     return false;
                 }
 
@@ -124,12 +119,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (item.getItemId()){
             case R.id.me_sort_most_popular:
                 // query movie by most Popular ( 100 == most popular)
-                mQueryPref = 100;
+                mQueryPref = NetworkingUtilities.QUERY_CODE_MOST_POPULAR;
                 loadMovies(mQueryPref);
                 return true;
             case R.id.me_sort_hightest_rated:
                 // query movie by most Popular ( 101 == best rates)
-                mQueryPref = 101;
+                mQueryPref = NetworkingUtilities.QUERY_CODE_HIGHEST_RATED;
                 loadMovies(mQueryPref);
                 return true;
             case R.id.me_settings:
@@ -144,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("callback", mData);
+        outState.putString(getString(R.string.bundle_key_callback), mData);
     }
 
     @Override
@@ -163,9 +158,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @NonNull
     @Override
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-            int queryType = args.getInt("queryType");
+        assert args != null;
+        int queryType = args.getInt(getString(R.string.bundle_key_query_code));
             switch (queryType){
-                case 102:
+                case NetworkingUtilities.QUERY_CODE_SEARCH_BY_TITLE:
                     return new MovieLoader(this, queryType, mUserSearchQuery);
                 default:
                     return new MovieLoader(this, queryType);
@@ -200,28 +196,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void loadMovies(int queryCode){
         Bundle bundle = new Bundle();
-        bundle.putInt("queryType", queryCode);
+        bundle.putInt(getString(R.string.bundle_key_query_code), queryCode);
         LoaderManager loaderManager = getSupportLoaderManager();
+        int TMDB_LOADER_ID = 22;
         loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }
 
     @Override
     public void onClick(Movie currentMovie) {
-        Context context = this;
         Intent detailIntent = new Intent(this, DetailsActivity.class);
-        detailIntent.putExtra("IMDB_ID", currentMovie.getImdbId());
+        detailIntent.putExtra(getString(R.string.bundle_key_movie_id), currentMovie.getImdbId());
         startActivity(detailIntent);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("show_titles")){
+        if (key.equals(getString(R.string.prefs_key_show_titles_on_main_screen))){
             try {
                 List<Movie> movies = JsonParsingUtilities.extractMoviesFromJson(mData);
                 mMovieAdapter.swapMovies(movies);

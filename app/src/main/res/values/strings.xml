@@ -1,6 +1,48 @@
 <resources>
+    <!--Name of the app-->
     <string name="app_name">PopularMovies</string>
 
+    <!--MainActivity Strings-->
     <!--error display if internet connection is missing-->
-    <string name="error_no_internet" translatable="true"> No internet connection.</string>
+    <string name="error_no_internet"> No internet connection.</string>
+    <!--Hint display in searchView for find movie by keyword-->
+    <string name="hint_search_query">Search a Movie</string>
+
+    <!--DetailsActivity Strings-->
+    <!--Label for release date part-->
+    <string name="release_date">Release date:</string>
+    <!--Label for rates part-->
+    <string name="rate">Rate :</string>
+    <!--Label for overview part-->
+    <string name="overview">Overview</string>
+    <!--Label for reviews part-->
+    <string name="reviews">Reviews</string>
+    <!--message of there is no review available for a movie-->
+    <string name="no_reviews_available">No review avalaible.</string>
+    <!--textview button for show reviewsActivity-->
+    <string name="show_all_reviews">Show all reviews</string>
+
+    <!--Preferences strings-->
+    <!--label for Show titles on main screen-->
+    <string name="prefs_show_titles_on_posters">Show titles on posters</string>
+    <!--Key for Show titles on main screen-->
+    <string name="prefs_key_show_titles_on_main_screen" translatable="false">show_titles</string>
+    <!--summary shown-->
+    <string name="prefs_summary_shown">Shown</string>
+    <!--summary hidden-->
+    <string name="prefs_summary_hidden">Hidden</string>
+
+    <!--Utils-->
+    <!--key for save query code in bundle-->
+    <string name="bundle_key_query_code" translatable="false">queryType</string>
+    <!--key for save movie id in bundle-->
+    <string name="bundle_key_movie_id" translatable="false">IMDB_ID</string>
+    <!--key for save Json response in bundle, used when activity is recreated -->
+    <string name="bundle_key_callback" translatable="false">callback</string>
+    <!--response for trailer path if not available-->
+    <string name="trailer_no_result">no_result</string>
+    <!--type of intent  for share trailer-->
+    <string name="share_intent_type">text/plain</string>
+
+
 </resources>

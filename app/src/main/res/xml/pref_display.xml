@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
-        android:title="Show titles on posters"
-        android:key="show_titles"
-        android:summaryOn="Shown"
-        android:summaryOff="Hidden"
+        android:title="@string/prefs_show_titles_on_posters"
+        android:key="@string/prefs_key_show_titles_on_main_screen"
+        android:summaryOn="@string/prefs_summary_shown"
+        android:summaryOff="@string/prefs_summary_hidden"
         android:defaultValue="true"
         />
 </PreferenceScreen>

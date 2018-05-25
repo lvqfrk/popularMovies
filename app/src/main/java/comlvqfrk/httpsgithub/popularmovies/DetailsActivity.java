@@ -29,6 +29,7 @@ import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Review;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
+import comlvqfrk.httpsgithub.popularmovies.utils.NetworkingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.ReviewLoader;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
@@ -40,13 +41,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     /** base Url for Youtube */
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
 
-    private static final int mQueryCode = 150;
+    /** mQuerycode 150 == details*/
+    private static final int mQueryCode = NetworkingUtilities.QUERY_CODE_GET_DETAILS;
 
     private final int TMDB_LOADER_ID = 22;
 
     private final int TMDB_REVIEW_LOADER_ID = 44;
-
-    private View vReview;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -65,12 +65,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private TextView tvSecondReviewContent;
     private TextView tvThirdReviewAuthor;
     private TextView tvThirdReviewContent;
-    private TextView tvShowReview;
 
     // data from Intent
     private int MOVIE_IMDB_ID;
-
-    private DetailedMovie currentMovie;
 
     // Intent to watch trailer
     private Intent trailerIntent;
@@ -84,17 +81,16 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ViewCompat.setTransitionName(findViewById(R.id.appBarLayout), "Name");
 
-        collapsingToolbarLayout =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle("title");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         Intent incIntent = getIntent();
-        MOVIE_IMDB_ID = incIntent.getIntExtra("IMDB_ID", 0);
+        MOVIE_IMDB_ID = incIntent.getIntExtra(getString(R.string.bundle_key_movie_id), 0);
 
         // header background
         ivBackdrop = findViewById(R.id.iv_backdrop);
@@ -128,14 +124,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         tvThirdReviewContent = findViewById(R.id.tv_third_review_content);
         loadReviews();
 
-        tvShowReview = findViewById(R.id.tv_show_reviews);
+        TextView tvShowReview = findViewById(R.id.tv_show_reviews);
 
 
         tvShowReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent reviewsIntent = new Intent(getApplicationContext(), ReviewsActivity.class);
-                reviewsIntent.putExtra("movieId", MOVIE_IMDB_ID);
+                reviewsIntent.putExtra(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
                 startActivity(reviewsIntent);
             }
         });
@@ -184,11 +180,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         // loader for details about the movie
         if (loader.getId() == TMDB_LOADER_ID) {
             try {
-                currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
+                DetailedMovie currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
 
                 collapsingToolbarLayout.setTitle(currentMovie.getTitle());
                 tvDetailTitle.setText(currentMovie.getTitle());
-                tvDetailVoteAverage.setText(currentMovie.getVoteAverage() + "");
+                tvDetailVoteAverage.setText(String.valueOf(currentMovie.getVoteAverage()));
                 tvDetailReleaseDate.setText(currentMovie.getReleaseDate());
                 tvDetailOverview.setText(currentMovie.getOverview());
                 String urlToPoster = TMDB_POSTER_W185_BASE_URL + currentMovie.getPosterUrl();
@@ -197,14 +193,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 Picasso.with(this).load(urlToBackdrop).into(ivBackdrop);
 
                 String trailerPath = currentMovie.getTrailerPath();
-                if(trailerPath == "no_result") {
+                if(trailerPath.equals(getString(R.string.trailer_no_result))) {
                     ivBtnPlay.setVisibility(View.GONE);
                 } else {
                     String trailerUrl = YOUTUBE_BASE_URL + trailerPath;
                     trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
                     shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_TEXT, trailerUrl);
-                    shareIntent.setType("text/plain");
+                    shareIntent.setType(getString(R.string.share_intent_type));
                 }
 
             } catch (JSONException e) {
@@ -218,15 +214,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             List<Review> reviews;
             try {
                 reviews = JsonParsingUtilities.extractReviewFromJsonResponse(data);
-                if (reviews == null || reviews.isEmpty()) {
-                    tvFirstReviewContent.setText("No review avalaible.");
-                    tvFirstReviewAuthor.setVisibility(View.GONE);
-                    tvSecondReviewAuthor.setVisibility(View.GONE);
-                    tvSecondReviewContent.setVisibility(View.GONE);
-                    tvThirdReviewAuthor.setVisibility(View.GONE);
-                    tvThirdReviewContent.setVisibility(View.GONE);
-                }
 
+                assert reviews != null;
                 if (reviews.size() >= 3) {
                     tvFirstReviewAuthor.setText(reviews.get(0).getReviewAuthor());
                     tvFirstReviewContent.setText(reviews.get(0).getReviewContent());
@@ -250,7 +239,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     tvThirdReviewContent.setVisibility(View.GONE);
                 } else {
                     tvFirstReviewAuthor.setVisibility(View.GONE);
-                    tvFirstReviewContent.setText("No review avalaible.");
+                    tvFirstReviewContent.setText(R.string.no_reviews_available);
                     tvSecondReviewAuthor.setVisibility(View.GONE);
                     tvSecondReviewContent.setVisibility(View.GONE);
                     tvThirdReviewAuthor.setVisibility(View.GONE);
@@ -269,15 +258,15 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     public void loadDetails(){
         Bundle bundle = new Bundle();
-        bundle.putInt("queryType", mQueryCode);
-        bundle.putInt("id", MOVIE_IMDB_ID);
+        bundle.putInt(getString(R.string.bundle_key_query_code), mQueryCode);
+        bundle.putInt(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }
 
     public void loadReviews(){
         Bundle bundle = new Bundle();
-        bundle.putInt("id", MOVIE_IMDB_ID);
+        bundle.putInt(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.restartLoader(TMDB_REVIEW_LOADER_ID, bundle, this);
     }
