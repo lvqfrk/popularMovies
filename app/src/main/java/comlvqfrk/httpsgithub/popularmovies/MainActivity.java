@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
 
+    /** used to check if Internet is avalaible */
     private boolean connectivityState = false;
     /** Base query type when apps is started */
     private int mQueryPref = NetworkingUtilities.QUERY_CODE_MOST_POPULAR;
@@ -201,6 +202,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    /**
+     * user to start the loader that request a list of movieto display.
+     * @param queryCode : the type of the request (Most popular, highest rated ...)
+     */
     public void loadMovies(int queryCode){
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.bundle_key_query_code), queryCode);

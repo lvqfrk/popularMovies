@@ -40,16 +40,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private static final String TMDB_BACKDROP_W1280_BASE_URL = "http://image.tmdb.org/t/p/w1280//";
     /** base Url for Youtube */
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
-
     /** mQuerycode 150 == details*/
     private static final int mQueryCode = NetworkingUtilities.QUERY_CODE_GET_DETAILS;
-
+    /** id for the details Loader */
     private final int TMDB_LOADER_ID = 22;
-
+    /** id for the reviews loader */
     private final int TMDB_REVIEW_LOADER_ID = 44;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
-
     private ImageView ivBackdrop;
     private ImageView ivBtnPlay;
     private TextView tvDetailTitle;
@@ -58,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private ImageView ivDetailPoster;
     private TextView tvDetailOverview;
 
-    // Review
+    // Review part
     private TextView tvFirstReviewAuthor;
     private TextView tvFirstReviewContent;
     private TextView tvSecondReviewAuthor;
@@ -68,7 +66,6 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     // data from Intent
     private int MOVIE_IMDB_ID;
-
     // Intent to watch trailer
     private Intent trailerIntent;
     // Intent to share trailer
@@ -135,7 +132,6 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(reviewsIntent);
             }
         });
-
     }
 
     @Override
@@ -165,14 +161,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     @NonNull
     @Override
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        if (id == TMDB_LOADER_ID) {
-            return new MovieLoader(this, mQueryCode, MOVIE_IMDB_ID);
-        } else if (id == TMDB_REVIEW_LOADER_ID) {
-            return new ReviewLoader(this, MOVIE_IMDB_ID);
-        } else {
-            return null;
+        switch (id) {
+            // loader for reviews
+            case TMDB_REVIEW_LOADER_ID:
+                return new ReviewLoader(this, MOVIE_IMDB_ID);
+            // default loader TMDB_LOADER_ID, for loading details
+            default:
+                return new MovieLoader(this, mQueryCode, MOVIE_IMDB_ID);
         }
-
     }
 
     @Override
@@ -256,6 +252,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     }
 
+    /**
+     * this method is used to start the loader that request movie's details.
+     */
     public void loadDetails(){
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.bundle_key_query_code), mQueryCode);
@@ -264,6 +263,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         loaderManager.restartLoader(TMDB_LOADER_ID, bundle, this);
     }
 
+    /**
+     * this method is used to start the loader that request reviews.
+     */
     public void loadReviews(){
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
