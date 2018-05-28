@@ -16,4 +16,6 @@
     <string name="menu_show_most_popular">Voir les plus populaires</string>
     <string name="menu_show_highest_rated">Voir les mieux notés</string>
     <string name="menu_settings">Paramètres</string>
+    <string name="overview_not_available">Synopsis indisponible.</string>
+    <string name="release_date_not_available">Date indisponible.</string>
 </resources>

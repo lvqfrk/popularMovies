@@ -1,7 +1,10 @@
 package comlvqfrk.httpsgithub.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +50,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private final int TMDB_LOADER_ID = 22;
     /** id for the reviews loader */
     private final int TMDB_REVIEW_LOADER_ID = 44;
+
+    private FrameLayout flDetailsLoading;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView ivBackdrop;
@@ -82,56 +88,67 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         ViewCompat.setTransitionName(findViewById(R.id.appBarLayout), "Name");
 
-        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle("title");
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        // Show the progress bar while loading.
+        flDetailsLoading = findViewById(R.id.fl_details_loading);
+        flDetailsLoading.setVisibility(View.VISIBLE);
 
-        Intent incIntent = getIntent();
-        MOVIE_IMDB_ID = incIntent.getIntExtra(getString(R.string.bundle_key_movie_id), 0);
+        if (isNetworkAvailable()) {
+            collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+            collapsingToolbarLayout.setTitle("title");
+            collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
-        // header background
-        ivBackdrop = findViewById(R.id.iv_backdrop);
+            Intent incIntent = getIntent();
+            MOVIE_IMDB_ID = incIntent.getIntExtra(getString(R.string.bundle_key_movie_id), 0);
 
-        // play button on the header
-        ivBtnPlay = findViewById(R.id.iv_btn_play);
-        ivBtnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (trailerIntent.resolveActivity(getPackageManager()) != null){
-                    startActivity(trailerIntent);
+            // header background
+            ivBackdrop = findViewById(R.id.iv_backdrop);
+
+            // play button on the header
+            ivBtnPlay = findViewById(R.id.iv_btn_play);
+            ivBtnPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (trailerIntent.resolveActivity(getPackageManager()) != null){
+                        startActivity(trailerIntent);
+                    }
                 }
-            }
-        });
+            });
 
-        // Details : title, release date, vote, poster image.
-        tvDetailTitle = findViewById(R.id.tv_details_title);
-        tvDetailVoteAverage = findViewById(R.id.tv_details_vote_average);
-        tvDetailReleaseDate = findViewById(R.id.tv_details_release_release_date);
-        ivDetailPoster = findViewById(R.id.iv_details_poster);
-        tvDetailOverview = findViewById(R.id.tv_details_synopsis_content);
-        // TODO : add a progressBar and error View that handle connection error.
-        loadDetails();
+            // Details : title, release date, vote, poster image.
+            tvDetailTitle = findViewById(R.id.tv_details_title);
+            tvDetailVoteAverage = findViewById(R.id.tv_details_vote_average);
+            tvDetailReleaseDate = findViewById(R.id.tv_details_release_release_date);
+            ivDetailPoster = findViewById(R.id.iv_details_poster);
+            tvDetailOverview = findViewById(R.id.tv_details_synopsis_content);
+            loadDetails();
 
-        // Reviews
-        tvFirstReviewAuthor = findViewById(R.id.tv_first_review_author);
-        tvFirstReviewContent = findViewById(R.id.tv_first_review_content);
-        tvSecondReviewAuthor = findViewById(R.id.tv_second_review_author);
-        tvSecondReviewContent = findViewById(R.id.tv_second_review_content);
-        tvThirdReviewAuthor = findViewById(R.id.tv_third_review_author);
-        tvThirdReviewContent = findViewById(R.id.tv_third_review_content);
-        loadReviews();
+            // Reviews
+            tvFirstReviewAuthor = findViewById(R.id.tv_first_review_author);
+            tvFirstReviewContent = findViewById(R.id.tv_first_review_content);
+            tvSecondReviewAuthor = findViewById(R.id.tv_second_review_author);
+            tvSecondReviewContent = findViewById(R.id.tv_second_review_content);
+            tvThirdReviewAuthor = findViewById(R.id.tv_third_review_author);
+            tvThirdReviewContent = findViewById(R.id.tv_third_review_content);
+            loadReviews();
 
-        TextView tvShowReview = findViewById(R.id.tv_show_reviews);
+            TextView tvShowReview = findViewById(R.id.tv_show_reviews);
 
 
-        tvShowReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent reviewsIntent = new Intent(getApplicationContext(), ReviewsActivity.class);
-                reviewsIntent.putExtra(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
-                startActivity(reviewsIntent);
-            }
-        });
+            tvShowReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent reviewsIntent = new Intent(getApplicationContext(), ReviewsActivity.class);
+                    reviewsIntent.putExtra(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
+                    startActivity(reviewsIntent);
+                }
+            });
+        } else {
+            FrameLayout internetError = findViewById(R.id.fl_details_internet_error);
+            internetError.setVisibility(View.VISIBLE);
+            flDetailsLoading.setVisibility(View.GONE);
+        }
+
+
     }
 
     @Override
@@ -176,7 +193,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         // loader for details about the movie
         if (loader.getId() == TMDB_LOADER_ID) {
             try {
-                DetailedMovie currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data);
+                DetailedMovie currentMovie = JsonParsingUtilities.extractDetailsFromJsonResponse(data, this);
 
                 collapsingToolbarLayout.setTitle(currentMovie.getTitle());
                 tvDetailTitle.setText(currentMovie.getTitle());
@@ -198,15 +215,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     shareIntent.putExtra(Intent.EXTRA_TEXT, trailerUrl);
                     shareIntent.setType(getString(R.string.share_intent_type));
                 }
-
+                flDetailsLoading.setVisibility(View.GONE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         // Loader for reviews
         else if (loader.getId() == TMDB_REVIEW_LOADER_ID) {
-
-
             List<Review> reviews;
             try {
                 reviews = JsonParsingUtilities.extractReviewFromJsonResponse(data);
@@ -271,6 +286,18 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         bundle.putInt(getString(R.string.bundle_key_movie_id), MOVIE_IMDB_ID);
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.restartLoader(TMDB_REVIEW_LOADER_ID, bundle, this);
+    }
+
+    /**
+     * check for network available
+     * @return true or false, depending if internet if avalaible.
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

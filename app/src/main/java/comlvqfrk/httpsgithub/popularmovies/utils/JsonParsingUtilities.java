@@ -1,5 +1,6 @@
 package comlvqfrk.httpsgithub.popularmovies.utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 
 import org.json.JSONArray;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import comlvqfrk.httpsgithub.popularmovies.DetailsActivity;
 import comlvqfrk.httpsgithub.popularmovies.R;
 import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
@@ -40,7 +42,6 @@ public class JsonParsingUtilities {
     private static final String KEY_VIDEOS = "videos";
     /** used to get the youtube key for a trailer in the array */
     private static final String KEY_KEY = "key";
-
 
     /**
      * this method extract the needed data from Json returned in the http reponse.
@@ -79,16 +80,19 @@ public class JsonParsingUtilities {
      * @return a DetailedMovie
      * @throws JSONException
      */
-    public static DetailedMovie extractDetailsFromJsonResponse(String jsonResponseStr) throws JSONException{
+    public static DetailedMovie extractDetailsFromJsonResponse(String jsonResponseStr, Context context) throws JSONException{
         JSONObject jsonResponse = new JSONObject(jsonResponseStr);
         int id = jsonResponse.getInt(KEY_ID);
         String title = jsonResponse.getString(KEY_TITLE);
         String posterPath = jsonResponse.getString(KEY_POSTER_PATH);
         double voteAverage = jsonResponse.getDouble(KEY_VOTE_AVERAGE);
+        // get the overview then check if it's empty
         String overview = jsonResponse.getString(KEY_OVERVIEW);
+        if (overview.isEmpty()) overview = context.getString(R.string.overview_not_available);
+        // get the release date then check if it's empty
         String releaseDate = jsonResponse.getString(KEY_RELEASE_DATE);
+        if (releaseDate.isEmpty()) releaseDate = context.getString(R.string.release_date_not_available);
         String backdrop = jsonResponse.getString(KEY_BACKDROP_PATH);
-
         JSONObject videos = jsonResponse.getJSONObject(KEY_VIDEOS);
         JSONArray videosResults = videos.getJSONArray(KEY_RESULTS);
         String trailerPath;

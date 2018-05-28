@@ -47,7 +47,8 @@
     <string name="bundle_key_callback" translatable="false">callback</string>
     <!--type of intent  for share trailer-->
     <string name="share_intent_type" translatable="false">text/plain</string>
-
+    <string name="overview_not_available">Overview is not available</string>
+    <string name="release_date_not_available">release date not available.</string>
 
 
 </resources>
