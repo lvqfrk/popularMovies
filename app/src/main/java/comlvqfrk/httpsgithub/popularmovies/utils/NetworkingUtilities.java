@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Scanner;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -53,6 +54,18 @@ public class NetworkingUtilities {
     private static final String REVIEWS = "/reviews";
     /** param keyword for select a page of reponse content, NOT USED FOR NOW*/
     private static final String PAGE = "page";
+    /** param to set the language of the request*/
+    private static final String PARAM_LANGUAGE = "language";
+    /** value for the language of the request, default is english*/
+    private static String VALUE_LANGUAGE = "en-US";
+
+    /**
+     * this method is used to set the language of request's response.
+     */
+    private static void setLanguage() {
+        String sysLanguage = Locale.getDefault().getDisplayLanguage();
+        if (sysLanguage.equals("français")) VALUE_LANGUAGE = "fr-FR";
+    }
 
     /**
      * build an URL for query movies based on user's keyword.
@@ -79,10 +92,12 @@ public class NetworkingUtilities {
      * @return URL to use to query the movies db.
      */
     private static URL buildUrlForMostPopular() {
+        setLanguage();
         Uri movieQueryUri = Uri.parse(TMDB_DISCOVER_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
                 .appendQueryParameter(SORT_BY_PARAM, MOST_POPULAR_VALUE)
                 .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
+                .appendQueryParameter(PARAM_LANGUAGE, VALUE_LANGUAGE)
                 .build();
 
         try {
@@ -97,11 +112,13 @@ public class NetworkingUtilities {
      * @return URL to use to query the movies db.
      */
     private static URL buildUrlForHighestRated() {
+        setLanguage();
         Uri movieQueryUri = Uri.parse(TMDB_DISCOVER_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
                 .appendQueryParameter(SORT_BY_PARAM, VOTE_AVERAGE)
                 .appendQueryParameter(INCLUDE_ADULT_PARAM, "false")
                 .appendQueryParameter(MIN_VOTE_COUNT_PARAM, MIN_VOTE_COUNT_VALUE)
+                .appendQueryParameter(PARAM_LANGUAGE, VALUE_LANGUAGE)
                 .build();
         try {
             return new URL(movieQueryUri.toString());
@@ -116,11 +133,12 @@ public class NetworkingUtilities {
      * @return URL to query movies details.
      */
     private static URL buildUrlForDetails(int id){
+        setLanguage();
         String urlWithId = TMDB_FIND_BY_ID_BASE_URL + id;
-
         Uri movieQueryUri = Uri.parse(urlWithId).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.THE_MOVIE_DATABASE_APIKEY_V3)
                 .appendQueryParameter(APPEND_TO_RESPONSE, VIDEOS)
+                .appendQueryParameter(PARAM_LANGUAGE, VALUE_LANGUAGE)
                 .build();
         try {
             return new URL(movieQueryUri.toString());

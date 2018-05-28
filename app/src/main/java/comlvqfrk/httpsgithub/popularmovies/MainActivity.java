@@ -25,6 +25,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.List;
+import java.util.Locale;
 
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
