@@ -1,4 +1,4 @@
-package comlvqfrk.httpsgithub.popularmovies.activities;
+package comlvqfrk.httpsgithub.popularmovies.fragments;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
