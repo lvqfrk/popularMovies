@@ -32,6 +32,12 @@
     <!--summary hidden-->
     <string name="prefs_summary_hidden">Hidden</string>
 
+    <!--Main Menu-->
+    <string name="menu_search">Search</string>
+    <string name="menu_show_most_popular">Show most popular</string>
+    <string name="menu_show_highest_rated">Show highest rated</string>
+    <string name="menu_settings">Settings</string>
+
     <!--Utils-->
     <!--key for save query code in bundle-->
     <string name="bundle_key_query_code" translatable="false">queryType</string>
@@ -40,7 +46,8 @@
     <!--key for save Json response in bundle, used when activity is recreated -->
     <string name="bundle_key_callback" translatable="false">callback</string>
     <!--type of intent  for share trailer-->
-    <string name="share_intent_type">text/plain</string>
+    <string name="share_intent_type" translatable="false">text/plain</string>
+
 
 
 </resources>

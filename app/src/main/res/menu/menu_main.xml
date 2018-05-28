@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <item android:id="@+id/me_search"
-            android:title="Search"
+            android:title="@string/menu_search"
             android:icon="@drawable/ic_round_search_24px"
             android:actionViewClass="android.widget.SearchView"
             android:showAsAction="collapseActionView|always"
@@ -12,14 +12,14 @@
 
         <item
             android:id="@+id/me_sort_most_popular"
-            android:title="Show most popular"
+            android:title="@string/menu_show_most_popular"
             app:showAsAction="never" />
 
         <item android:id="@+id/me_sort_hightest_rated"
-            android:title="Show highest rated"
+            android:title="@string/menu_show_highest_rated"
             app:showAsAction="never" />
 
         <item android:id="@+id/me_settings"
-            android:title="Settings"
+            android:title="@string/menu_settings"
             app:showAsAction="never" />
 </menu>

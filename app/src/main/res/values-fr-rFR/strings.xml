@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="error_no_internet">Connexion internet indisponible</string>
+    <string name="hint_search_query">Chercher un film</string>
+    <string name="release_date">Date de sortie:</string>
+    <string name="rate">Note:</string>
+    <string name="overview">Synopsis</string>
+    <string name="reviews">Avis</string>
+    <string name="no_reviews_available">"Aucun avis disponible. "</string>
+    <string name="show_all_reviews">Voir tous les avis</string>
+    <string name="prefs_show_titles_on_posters">Afficher les titres sur les posters</string>
+    <string name="prefs_summary_shown">Affichés</string>
+    <string name="prefs_summary_hidden">Masqués</string>
+    <string name="menu_search">Chercher</string>
+    <string name="menu_show_most_popular">Voir les plus populaires</string>
+    <string name="menu_show_highest_rated">Voir les mieux notés</string>
+    <string name="menu_settings">Paramètres</string>
+</resources>
