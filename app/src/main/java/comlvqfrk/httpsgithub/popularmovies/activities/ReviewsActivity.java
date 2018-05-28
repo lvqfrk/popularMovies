@@ -1,4 +1,4 @@
-package comlvqfrk.httpsgithub.popularmovies;
+package comlvqfrk.httpsgithub.popularmovies.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import org.json.JSONException;
 import java.util.List;
 
+import comlvqfrk.httpsgithub.popularmovies.R;
+import comlvqfrk.httpsgithub.popularmovies.adapters.ReviewAdapter;
 import comlvqfrk.httpsgithub.popularmovies.data.Review;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.ReviewLoader;
@@ -38,7 +40,6 @@ public class ReviewsActivity extends AppCompatActivity implements LoaderManager.
         mRecyclerview.setLayoutManager(layoutManager);
         mReviewAdapter = new ReviewAdapter(this);
         mRecyclerview.setAdapter(mReviewAdapter);
-        // TODO: handle no reviews and internet connection
         loadReviews();
     }
 

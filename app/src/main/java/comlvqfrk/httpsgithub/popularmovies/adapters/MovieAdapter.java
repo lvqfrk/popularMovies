@@ -1,4 +1,4 @@
-package comlvqfrk.httpsgithub.popularmovies;
+package comlvqfrk.httpsgithub.popularmovies.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import comlvqfrk.httpsgithub.popularmovies.R;
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{

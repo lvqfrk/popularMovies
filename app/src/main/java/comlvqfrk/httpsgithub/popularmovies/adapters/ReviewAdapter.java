@@ -1,4 +1,4 @@
-package comlvqfrk.httpsgithub.popularmovies;
+package comlvqfrk.httpsgithub.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import comlvqfrk.httpsgithub.popularmovies.R;
 import comlvqfrk.httpsgithub.popularmovies.data.Review;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdapterViewHolder>{

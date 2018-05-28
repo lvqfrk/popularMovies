@@ -1,7 +1,9 @@
-package comlvqfrk.httpsgithub.popularmovies;
+package comlvqfrk.httpsgithub.popularmovies.activities;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+import comlvqfrk.httpsgithub.popularmovies.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat{
     @Override

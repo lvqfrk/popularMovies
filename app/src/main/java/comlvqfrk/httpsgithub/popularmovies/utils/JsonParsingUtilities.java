@@ -1,7 +1,6 @@
 package comlvqfrk.httpsgithub.popularmovies.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,7 +9,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import comlvqfrk.httpsgithub.popularmovies.DetailsActivity;
 import comlvqfrk.httpsgithub.popularmovies.R;
 import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Movie;

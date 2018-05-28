@@ -1,4 +1,4 @@
-package comlvqfrk.httpsgithub.popularmovies;
+package comlvqfrk.httpsgithub.popularmovies.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +29,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
+import comlvqfrk.httpsgithub.popularmovies.R;
 import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Review;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
