@@ -23,7 +23,6 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -38,7 +37,9 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:parentActivityName=".activities.MainActivity" />
-        <activity android:name=".activities.FavoritesActivity"></activity>
+        <activity
+            android:name=".activities.FavoritesActivity"
+            android:parentActivityName=".activities.MainActivity" />
     </application>
 
 </manifest>

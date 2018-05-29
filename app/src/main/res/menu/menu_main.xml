@@ -19,6 +19,11 @@
             android:title="@string/menu_show_highest_rated"
             app:showAsAction="never" />
 
+        <!--TODO: strings value and translate-->
+        <item android:id="@+id/me_to_favorites"
+            android:title="Favorites"
+            app:showAsAction="never"/>
+
         <item android:id="@+id/me_settings"
             android:title="@string/menu_settings"
             app:showAsAction="never" />

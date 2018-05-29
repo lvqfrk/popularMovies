@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
                 startActivity(startSettingsActivity);
                 return true;
+            case R.id.me_to_favorites:
+                Intent startFavoritesActivity = new Intent(this, FavoritesActivity.class);
+                startActivity(startFavoritesActivity);
             default:
                 return super.onOptionsItemSelected(item);
         }
