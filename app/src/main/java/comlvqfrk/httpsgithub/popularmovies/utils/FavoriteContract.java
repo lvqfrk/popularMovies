@@ -40,7 +40,7 @@ public class FavoriteContract {
          * @param id Unique id pointing to that row
          * @return Uri to query details about a single movie entry
          */
-        public static Uri buildTodoUriWithId(long id) {
+        public static Uri buildFavoriteUriWithId(long id) {
             return CONTENT_URI.buildUpon()
                     .appendPath(Long.toString(id))
                     .build();

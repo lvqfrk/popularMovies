@@ -13,6 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        
+        <provider
+            android:authorities="comlvqfrk.httpsgithub.popularmovies"
+            android:name=".utils.FavoriteProvider"
+            android:exported="false"/>
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleTop">
