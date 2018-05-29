@@ -19,13 +19,13 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_FAVORITES_TABLE =
 
                 "CREATE TABLE " + FavoriteContract.FavoriteEntry.TABLE_NAME + " (" +
-                        FavoriteContract.FavoriteEntry._ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        FavoriteContract.FavoriteEntry.COLUMN_TMDB_ID + "INTEGER NOT NULL, " +
-                        FavoriteContract.FavoriteEntry.COLUMN_TITLE + "TEXT NOT NULL, " +
-                        FavoriteContract.FavoriteEntry.COLUMN_POSTER + "BLOB, " +
-                        FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE + "TEXT, " +
-                        FavoriteContract.FavoriteEntry.COLUMN_RATE + "REAL, " +
-                        FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW + "TEXT);";
+                        FavoriteContract.FavoriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        FavoriteContract.FavoriteEntry.COLUMN_TMDB_ID + " INTEGER NOT NULL, " +
+                        FavoriteContract.FavoriteEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                        FavoriteContract.FavoriteEntry.COLUMN_POSTER + " BLOB, " +
+                        FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE + " TEXT, " +
+                        FavoriteContract.FavoriteEntry.COLUMN_RATE + " REAL, " +
+                        FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW + " TEXT);";
 
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
     }

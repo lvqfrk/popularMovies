@@ -1,14 +1,21 @@
 package comlvqfrk.httpsgithub.popularmovies.activities;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
@@ -22,6 +29,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +40,8 @@ import java.util.List;
 import comlvqfrk.httpsgithub.popularmovies.R;
 import comlvqfrk.httpsgithub.popularmovies.data.DetailedMovie;
 import comlvqfrk.httpsgithub.popularmovies.data.Review;
+import comlvqfrk.httpsgithub.popularmovies.utils.DbBitmapUtility;
+import comlvqfrk.httpsgithub.popularmovies.utils.FavoriteContract;
 import comlvqfrk.httpsgithub.popularmovies.utils.JsonParsingUtilities;
 import comlvqfrk.httpsgithub.popularmovies.utils.MovieLoader;
 import comlvqfrk.httpsgithub.popularmovies.utils.NetworkingUtilities;
@@ -52,6 +62,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     /** id for the reviews loader */
     private final int TMDB_REVIEW_LOADER_ID = 44;
 
+    /** favorite status */
+    private boolean mIsFavorite = false;
+
     private FrameLayout flDetailsLoading;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -62,6 +75,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private TextView tvDetailReleaseDate;
     private ImageView ivDetailPoster;
     private TextView tvDetailOverview;
+    private FloatingActionButton fabFavorite;
 
     // Review part
     private TextView tvFirstReviewAuthor;
@@ -114,6 +128,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     }
                 }
             });
+
+            displayFavBtn();
 
             // Details : title, release date, vote, poster image.
             tvDetailTitle = findViewById(R.id.tv_details_title);
@@ -299,6 +315,84 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * this method set the correct color to the fav button and the correct method onCLick,
+     * depending if the movie is in the favorite database.
+     */
+    private void displayFavBtn() {
+        checkIsFavorite();
+        fabFavorite = findViewById(R.id.fab_favorite);
+        if(mIsFavorite) fabFavorite.setColorFilter(getResources().getColor(R.color.colorPrimary));
+        fabFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mIsFavorite) {
+                    addToFavorites();
+                } else {
+                    removeFromFavorites();
+                }
+            }
+        });
+    }
+
+    /**
+     * used to add a movie in the favorite database.
+     */
+    private void addToFavorites() {
+        String title = tvDetailTitle.getText().toString();
+        String releaseDate = tvDetailReleaseDate.getText().toString();
+        String overview = tvDetailOverview.getText().toString();
+        String rate = tvDetailVoteAverage.getText().toString();
+        // get the bitmap of the poster.
+        Bitmap posterAsBitmap = ((BitmapDrawable) ivDetailPoster.getDrawable()).getBitmap();
+        //convert the bitmap to byte array to store in db.
+        byte[] posterAsByte = DbBitmapUtility.getBytes(posterAsBitmap);
+        ContentValues values = new ContentValues();
+        values.put(FavoriteContract.FavoriteEntry.COLUMN_TMDB_ID, MOVIE_IMDB_ID);
+        values.put(FavoriteContract.FavoriteEntry.COLUMN_TITLE, title);
+        values.put(FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE, releaseDate);
+        values.put(FavoriteContract.FavoriteEntry.COLUMN_RATE, rate);
+        values.put(FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW, overview);
+        values.put(FavoriteContract.FavoriteEntry.COLUMN_POSTER, posterAsByte);
+        ContentResolver cr = getContentResolver();
+        cr.insert(FavoriteContract.FavoriteEntry.CONTENT_URI, values);
+        fabFavorite.setColorFilter(getResources().getColor(R.color.colorPrimary));
+        mIsFavorite = true;
+        Toast.makeText(this, "The movie is added to your favorite.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * used to remove the movie from favorite database.
+     */
+    private void removeFromFavorites() {
+        ContentResolver cr = getContentResolver();
+        String where = FavoriteContract.FavoriteEntry.COLUMN_TMDB_ID + " = ? ";
+        String[] whereArgs = {String.valueOf(MOVIE_IMDB_ID)};
+        cr.delete(FavoriteContract.FavoriteEntry.CONTENT_URI,
+                where,
+                whereArgs);
+        fabFavorite.setColorFilter(getResources().getColor(R.color.colorWhite));
+        mIsFavorite = false;
+        Toast.makeText(this, "The movie is deleted from your favorite.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * used to check if the movie is already in favorite database.
+     */
+    private void checkIsFavorite() {
+        ContentResolver cr = getContentResolver();
+        String where = FavoriteContract.FavoriteEntry.COLUMN_TMDB_ID + " = ? ";
+        String[] whereArgs = {String.valueOf(MOVIE_IMDB_ID)};
+        Cursor cursor = cr.query(FavoriteContract.FavoriteEntry.CONTENT_URI,
+                null,
+                where,
+                whereArgs,
+                null);
+        if (cursor.getCount() > 0) mIsFavorite = true;
     }
 
 }

@@ -13,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        
         <provider
-            android:authorities="comlvqfrk.httpsgithub.popularmovies"
             android:name=".utils.FavoriteProvider"
-            android:exported="false"/>
+            android:authorities="comlvqfrk.httpsgithub.popularmovies"
+            android:exported="false" />
+
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleTop">
@@ -35,8 +35,10 @@
         <activity
             android:name=".activities.ReviewsActivity"
             android:parentActivityName=".activities.DetailsActivity" />
-        <activity android:name=".activities.SettingsActivity"
-            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.FavoritesActivity"></activity>
     </application>
 
 </manifest>
