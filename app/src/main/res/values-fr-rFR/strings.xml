@@ -18,4 +18,6 @@
     <string name="menu_settings">Paramètres</string>
     <string name="overview_not_available">Synopsis indisponible.</string>
     <string name="release_date_not_available">Date indisponible.</string>
+    <string name="show_my_favorites">Voir mes favoris</string>
+    <string name="favorites">Favoris</string>
 </resources>

@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+    /* display if no internet connection */
+    private TextView mShowMyFavorites;
 
     /** used to check if Internet is avalaible */
     private boolean connectivityState = false;
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mProgressBar = findViewById(R.id.pb_main_loading);
         mProgressBar.setVisibility(View.VISIBLE);
+
+        mShowMyFavorites = findViewById(R.id.tv_Show_favorites_no_internet);
 
         TextView mTvInternetError = findViewById(R.id.tv_main_error_internet);
         connectivityState = isNetworkAvailable();
@@ -82,10 +86,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             mProgressBar.setVisibility(View.GONE);
             mTvInternetError.setVisibility(View.VISIBLE);
+            mShowMyFavorites.setVisibility(View.VISIBLE);
         }
     }
-
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (connectivityState) {
@@ -236,5 +240,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 e.printStackTrace();
             }
         }
+    }
+
+    public void toFavorites(View view) {
+        Intent startFavorites = new Intent(this, FavoritesActivity.class);
+        startActivity(startFavorites);
     }
 }

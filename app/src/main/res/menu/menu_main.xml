@@ -21,7 +21,7 @@
 
         <!--TODO: strings value and translate-->
         <item android:id="@+id/me_to_favorites"
-            android:title="Favorites"
+            android:title="@string/favorites"
             app:showAsAction="never"/>
 
         <item android:id="@+id/me_settings"
