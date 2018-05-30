@@ -176,16 +176,21 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_details, menu);
-        return true;
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_details, menu);
+            return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.me_share_trailer:
-                startActivity(shareIntent);
+                if (shareIntent != null) {
+                    startActivity(shareIntent);
+                } else {
+                    Toast.makeText(this, "no trailer to share.", Toast.LENGTH_SHORT)
+                            .show();
+                }
                 return true;
             default:
                 return false;
@@ -225,6 +230,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 String trailerPath = currentMovie.getTrailerPath();
                 if(trailerPath == null) {
                     ivBtnPlay.setVisibility(View.GONE);
+                    shareIntent = null;
                 } else {
                     String trailerUrl = YOUTUBE_BASE_URL + trailerPath;
                     trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
