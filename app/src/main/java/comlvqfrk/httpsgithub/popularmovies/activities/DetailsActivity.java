@@ -229,7 +229,19 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     Picasso.with(this).load(urlToPoster).into(ivDetailPoster);
                 }
                 String urlToBackdrop = TMDB_BACKDROP_W1280_BASE_URL + currentMovie.getBackdropPath();
-                Picasso.with(this).load(urlToBackdrop).into(ivBackdrop);
+
+                Picasso.with(this).load(urlToBackdrop).into(ivBackdrop, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        fabFavorite.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        ivDetailPoster.setImageResource(R.drawable.poster_placeholder);
+                        fabFavorite.setVisibility(View.VISIBLE);
+                    }
+                });
 
                 String trailerPath = currentMovie.getTrailerPath();
                 if(trailerPath == null) {
