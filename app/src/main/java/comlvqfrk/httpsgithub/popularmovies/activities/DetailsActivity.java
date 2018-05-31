@@ -222,8 +222,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 tvDetailVoteAverage.setText(String.valueOf(currentMovie.getVoteAverage()));
                 tvDetailReleaseDate.setText(currentMovie.getReleaseDate());
                 tvDetailOverview.setText(currentMovie.getOverview());
-                String urlToPoster = TMDB_POSTER_W185_BASE_URL + currentMovie.getPosterUrl();
-                Picasso.with(this).load(urlToPoster).into(ivDetailPoster);
+                if (currentMovie.getPosterUrl().equals("null")) {
+                    ivDetailPoster.setImageResource(R.drawable.poster_placeholder);
+                } else {
+                    String urlToPoster = TMDB_POSTER_W185_BASE_URL + currentMovie.getPosterUrl();
+                    Picasso.with(this).load(urlToPoster).into(ivDetailPoster);
+                }
                 String urlToBackdrop = TMDB_BACKDROP_W1280_BASE_URL + currentMovie.getBackdropPath();
                 Picasso.with(this).load(urlToBackdrop).into(ivBackdrop);
 

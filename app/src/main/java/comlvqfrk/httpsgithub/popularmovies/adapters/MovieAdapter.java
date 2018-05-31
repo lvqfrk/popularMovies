@@ -59,8 +59,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             holder.tvTitle.setVisibility(View.INVISIBLE);
         }
 
-        String posterUrl = TMDB_POSTER_W185_BASE_URL + mMovies.get(position).getPosterUrl();
-        Picasso.with(mContext).load(posterUrl).into(holder.ivPoster);
+        if (mMovies.get(position).getPosterUrl().equals("null")) {
+            holder.ivPoster.setImageResource(R.drawable.poster_placeholder);
+        } else {
+            String posterUrl = TMDB_POSTER_W185_BASE_URL + mMovies.get(position).getPosterUrl();
+            Picasso.with(mContext).load(posterUrl).into(holder.ivPoster);
+        }
     }
 
     @Override
